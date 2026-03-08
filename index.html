@@ -243,7 +243,7 @@ body {
 .ex.open .ex-sets { display:block; }
 
 .sets-hdr {
-  display:grid; grid-template-columns:40px 1fr 1fr 1fr 56px; gap:8px;
+  display:grid; grid-template-columns:36px 1fr 1fr 1fr 50px 40px; gap:6px;
   margin-bottom:10px; padding-bottom:7px; align-items:center;
   border-bottom:1px dashed rgba(11,29,51,.06);
 }
@@ -253,7 +253,7 @@ body {
 .sets-hdr .sh-c { text-align:center; }
 
 .set-row {
-  display:grid; grid-template-columns:40px 1fr 1fr 1fr 56px; gap:8px;
+  display:grid; grid-template-columns:36px 1fr 1fr 1fr 50px 40px; gap:6px;
   margin-bottom:8px; align-items:center;
 }
 .set-label {
@@ -285,6 +285,28 @@ body {
 .pct-badge.hit { background:var(--green-bg); color:var(--green); }
 .pct-badge.miss { background:var(--red-bg); color:var(--red); }
 .pct-badge.neutral { background:rgba(11,29,51,.03); color:var(--text-dim); }
+
+/* ── SET CONFIRM BUTTON ── */
+.set-confirm {
+  width:36px; height:36px; display:flex; align-items:center; justify-content:center;
+  background:transparent; border:1.5px solid var(--border);
+  color:var(--text-dim); cursor:pointer; transition:all .25s; font-size:14px;
+  flex-shrink:0;
+}
+.set-confirm:hover { border-color:var(--blue); color:var(--blue); }
+.set-confirm.saved {
+  background:var(--green); border-color:var(--green); color:white;
+  animation:confirmPop .3s ease;
+}
+.set-confirm.failed {
+  background:var(--red); border-color:var(--red); color:white;
+}
+.set-confirm.saving {
+  opacity:.5; pointer-events:none;
+}
+@keyframes confirmPop {
+  0%{transform:scale(1)} 50%{transform:scale(1.15)} 100%{transform:scale(1)}
+}
 
 /* ── SESSION NOTES ── */
 .notes {
@@ -398,8 +420,8 @@ body {
   .pr-form{flex-direction:column;}
   .pr-fg input,.pr-fg select{width:100%;}
   .weeknav{padding:12px 14px;}
-  .set-row{grid-template-columns:32px 1fr 1fr 1fr 44px;}
-  .sets-hdr{grid-template-columns:32px 1fr 1fr 1fr 44px;}
+  .set-row{grid-template-columns:30px 1fr 1fr 1fr 42px 34px;}
+  .sets-hdr{grid-template-columns:30px 1fr 1fr 1fr 42px 34px;}
   .sb-btn .tip{display:none;}
 }
 </style>
@@ -1165,10 +1187,7 @@ function setCompletion(w,d,v){
   const key = w+'_'+d;
   _completions[key] = v;
   save('completions', _completions);
-  sb(`completions?week_day=eq.${encodeURIComponent(key)}`, 'PATCH', {completed: !!v})
-    .then(res => {
-      if(!res || res.length === 0) sb('completions', 'POST', {week_day: key, completed: !!v});
-    });
+  sb('completions?on_conflict=week_day', 'POST', {week_day: key, completed: !!v});
 }
 
 // ── NOTES ──
@@ -1202,22 +1221,68 @@ function setPR(name,val){
 // ── SET LOGS ──
 let _sets = {};
 function getSetLog(eid){ return _sets[eid] || {}; }
-function logSet(eid, setNum, field, val){
+
+// Cache locally only — no Supabase write
+function cacheSet(eid, setNum, field, val){
   if(!_sets[eid]) _sets[eid] = {};
   if(!_sets[eid][setNum]) _sets[eid][setNum] = {};
   _sets[eid][setNum][field] = val;
+  // Mark as unsaved when edited
+  _sets[eid][setNum].saved = false;
   save('sets', _sets);
-  // Always send BOTH wt and reps so neither gets overwritten with empty
-  const row = _sets[eid][setNum];
-  const payload = {eid: eid, set_num: parseInt(setNum), wt: row.wt||'', reps: row.reps||''};
-  // First try PATCH (update existing row)
-  sb(`set_logs?eid=eq.${encodeURIComponent(eid)}&set_num=eq.${setNum}`, 'PATCH', {wt: row.wt||'', reps: row.reps||''})
-    .then(res => {
-      // If PATCH returned empty (no existing row), do POST to insert
-      if(!res || res.length === 0){
-        sb('set_logs', 'POST', payload);
-      }
-    });
+  // Update confirm button to show unsaved state
+  const btn = document.querySelector(`#sr_${eid}_${setNum} .set-confirm`);
+  if(btn){ btn.className = 'set-confirm'; btn.textContent = '↑'; }
+}
+
+// Confirm and write to Supabase — visual feedback
+async function confirmSet(eid, setNum, btn){
+  const row = _sets[eid] && _sets[eid][setNum];
+  if(!row || (!row.wt && !row.reps)){ return; }
+
+  // Show saving state
+  btn.className = 'set-confirm saving';
+  btn.textContent = '…';
+
+  const wt = row.wt || '';
+  const reps = row.reps || '';
+
+  // Try PATCH first (update existing), then POST if no row exists
+  let success = false;
+  try {
+    const patchRes = await sb(
+      `set_logs?eid=eq.${encodeURIComponent(eid)}&set_num=eq.${setNum}`,
+      'PATCH',
+      {wt: String(wt), reps: String(reps)}
+    );
+    if(patchRes && patchRes.length > 0){
+      success = true;
+    } else {
+      // No existing row — insert
+      const postRes = await sb('set_logs', 'POST', {
+        eid: eid,
+        set_num: parseInt(setNum),
+        wt: String(wt),
+        reps: String(reps)
+      });
+      success = postRes !== null;
+    }
+  } catch(e){
+    console.error('confirmSet error:', e);
+    success = false;
+  }
+
+  if(success){
+    _sets[eid][setNum].saved = true;
+    save('sets', _sets);
+    btn.className = 'set-confirm saved';
+    btn.textContent = '✓';
+  } else {
+    btn.className = 'set-confirm failed';
+    btn.textContent = '✗';
+    // Reset after 2 seconds so they can retry
+    setTimeout(()=>{ btn.className = 'set-confirm'; btn.textContent = '↑'; }, 2000);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1386,9 +1451,9 @@ function exHTML(ex, section, idx){
     h += `<div class="ex-toggle">TAP TO LOG SETS</div>`;
     h += `<div class="ex-sets" onclick="event.stopPropagation()">`;
 
-    // Column headers
+    // Column headers — 6 columns
     h += `<div class="sets-hdr">`;
-    h += `<span>SET</span><span>TARGET</span><span>WEIGHT</span><span>REPS</span><span class="sh-c">%</span>`;
+    h += `<span>SET</span><span>TARGET</span><span>WEIGHT</span><span>REPS</span><span class="sh-c">%</span><span class="sh-c">SAVE</span>`;
     h += `</div>`;
 
     // Per-set target reps from wave loading
@@ -1399,6 +1464,7 @@ function exHTML(ex, section, idx){
       const setTarget = targetWt ? Math.round(targetWt) : 0;
       const setReps = repScheme[s-1] || parsed.reps || '';
       const actualWt = sv.wt ? parseFloat(sv.wt) : 0;
+      const isSaved = sv.saved;
 
       // Calculate % of target
       let pctClass = 'neutral';
@@ -1409,12 +1475,13 @@ function exHTML(ex, section, idx){
         pctClass = pctVal >= 100 ? 'hit' : pctVal >= 90 ? 'neutral' : 'miss';
       }
 
-      h += `<div class="set-row">`;
+      h += `<div class="set-row" id="sr_${eid}_${s}">`;
       h += `<div class="set-label">S${s}</div>`;
       h += `<div class="set-target-wt">${setTarget > 0 ? setTarget+'<span style="font-size:8px;opacity:.5;margin-left:2px">lbs</span>' : '—'}</div>`;
-      h += `<input class="set-input" type="number" inputmode="decimal" placeholder="${setTarget>0?setTarget:'lbs'}" value="${sv.wt||''}" data-eid="${eid}" data-set="${s}" data-target="${setTarget}" onchange="logSet('${eid}',${s},'wt',this.value);updatePctBadge(this)" onfocus="this.select()">`;
-      h += `<input class="set-input" type="number" inputmode="numeric" placeholder="${setReps||'reps'}" value="${sv.reps||''}" onchange="logSet('${eid}',${s},'reps',this.value)" onfocus="this.select()">`;
+      h += `<input class="set-input" type="number" inputmode="decimal" placeholder="${setTarget>0?setTarget:'lbs'}" value="${sv.wt||''}" data-eid="${eid}" data-set="${s}" data-target="${setTarget}" oninput="cacheSet('${eid}',${s},'wt',this.value);updatePctBadge(this)" onfocus="this.select()">`;
+      h += `<input class="set-input" type="number" inputmode="numeric" placeholder="${setReps||'reps'}" value="${sv.reps||''}" oninput="cacheSet('${eid}',${s},'reps',this.value)" onfocus="this.select()">`;
       h += `<div class="pct-badge ${pctClass}" data-eid="${eid}" data-set="${s}">${pctText}</div>`;
+      h += `<button class="set-confirm${isSaved?' saved':''}" onclick="confirmSet('${eid}',${s},this)" title="Save to database">${isSaved?'✓':'↑'}</button>`;
       h += `</div>`;
     }
     h += `</div>`;
@@ -1425,7 +1492,7 @@ function exHTML(ex, section, idx){
 }
 
 function toggleEx(el, e){
-  if(e.target.tagName==='INPUT'||e.target.classList.contains('pct-badge')) return;
+  if(e.target.tagName==='INPUT'||e.target.tagName==='BUTTON'||e.target.classList.contains('pct-badge')||e.target.classList.contains('set-confirm')) return;
   el.classList.toggle('open');
 }
 
