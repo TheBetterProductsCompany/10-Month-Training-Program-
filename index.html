@@ -1124,21 +1124,126 @@ let curDay = 0; // 0=MON
 let curView = 'today';
 const PROG_START = new Date(2026, 2, 9); // Mon March 9 2026 = Week 1 Day 1
 
+// ═══════════════════════════════════════════════════════════
+// SUPABASE CONNECTION
+// ═══════════════════════════════════════════════════════════
+const SB_URL = 'https://foiwnopzonvovaqhrfhw.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvaXdub3B6b252b3ZhcWhyZmh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5OTU3ODUsImV4cCI6MjA4ODU3MTc4NX0.XwrO960sSowp-TfyoooAftXxumBL1OAWZ47AZpo4TPc';
+
+async function sb(endpoint, method, body){
+  const opts = {
+    method: method || 'GET',
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': method === 'POST' ? 'resolution=merge-duplicates,return=representation' : 'return=representation'
+    }
+  };
+  if(body) opts.body = JSON.stringify(body);
+  try {
+    const r = await fetch(SB_URL + '/rest/v1/' + endpoint, opts);
+    if(!r.ok) { console.error('SB error:', r.status, await r.text()); return null; }
+    const text = await r.text();
+    return text ? JSON.parse(text) : [];
+  } catch(e){ console.error('SB fetch error:', e); return null; }
+}
+
+// ═══════════════════════════════════════════════════════════
+// LOCAL CACHE (instant UI) + SUPABASE (permanent storage)
+// ═══════════════════════════════════════════════════════════
 function save(k,v){ try{localStorage.setItem('r42_'+k,JSON.stringify(v))}catch(e){} }
 function load(k,d){ try{const v=localStorage.getItem('r42_'+k);return v?JSON.parse(v):d}catch(e){return d} }
 
-function getCompletions(){ return load('completions',{}); }
-function setCompletion(w,d,v){ const c=getCompletions(); c[w+'_'+d]=v; save('completions',c); }
-function isComplete(w,d){ return !!getCompletions()[w+'_'+d]; }
+// ── COMPLETIONS ──
+let _completions = {};
+function getCompletions(){ return _completions; }
+function isComplete(w,d){ return !!_completions[w+'_'+d]; }
+function setCompletion(w,d,v){
+  const key = w+'_'+d;
+  _completions[key] = v;
+  save('completions', _completions);
+  sb('completions', 'POST', {week_day: key, completed: !!v});
+}
 
-function getNotes(w,d){ return load('notes',{})[w+'_'+d]||''; }
-function setNote(w,d,txt){ const n=load('notes',{}); n[w+'_'+d]=txt; save('notes',n); }
+// ── NOTES ──
+let _notes = {};
+function getNotes(w,d){ return _notes[w+'_'+d] || ''; }
+function setNote(w,d,txt){
+  const key = w+'_'+d;
+  _notes[key] = txt;
+  save('notes', _notes);
+  sb('session_notes', 'POST', {week_day: key, note: txt});
+}
 
-function getPRs(){ return load('prs',{
+// ── PRs ──
+let _prs = {
   'Box Back Squat':335,'Front Squat':265,'Power Clean':225,'Snatch':115,
   'Bench Press':285,'Pendlay Row':200,'BB Hip Thrust':0,'Weighted Pull-ups':50
-}); }
-function setPR(name,val){ const p=getPRs(); p[name]=val; save('prs',p); }
+};
+function getPRs(){ return _prs; }
+function setPR(name,val){
+  _prs[name] = val;
+  save('prs', _prs);
+  sb('prs', 'POST', {exercise: name, weight: val});
+}
+
+// ── SET LOGS ──
+let _sets = {};
+function getSetLog(eid){ return _sets[eid] || {}; }
+function logSet(eid, setNum, field, val){
+  if(!_sets[eid]) _sets[eid] = {};
+  if(!_sets[eid][setNum]) _sets[eid][setNum] = {};
+  _sets[eid][setNum][field] = val;
+  save('sets', _sets);
+  // Build the row for Supabase
+  const row = _sets[eid][setNum];
+  sb('set_logs', 'POST', {eid: eid, set_num: setNum, wt: row.wt||'', reps: row.reps||''});
+}
+
+// ═══════════════════════════════════════════════════════════
+// LOAD ALL DATA FROM SUPABASE ON BOOT
+// ═══════════════════════════════════════════════════════════
+async function loadFromSupabase(){
+  // Load completions
+  const compData = await sb('completions?select=week_day,completed');
+  if(compData && compData.length){
+    compData.forEach(r=>{ if(r.completed) _completions[r.week_day] = true; });
+  }
+  save('completions', _completions);
+
+  // Load notes
+  const noteData = await sb('session_notes?select=week_day,note');
+  if(noteData && noteData.length){
+    noteData.forEach(r=>{ if(r.note) _notes[r.week_day] = r.note; });
+  }
+  save('notes', _notes);
+
+  // Load PRs
+  const prData = await sb('prs?select=exercise,weight');
+  if(prData && prData.length){
+    prData.forEach(r=>{ _prs[r.exercise] = Number(r.weight); });
+  }
+  save('prs', _prs);
+
+  // Load set logs
+  const setData = await sb('set_logs?select=eid,set_num,wt,reps');
+  if(setData && setData.length){
+    setData.forEach(r=>{
+      if(!_sets[r.eid]) _sets[r.eid] = {};
+      _sets[r.eid][r.set_num] = {wt: r.wt, reps: r.reps};
+    });
+  }
+  save('sets', _sets);
+}
+
+// Load from local cache first (instant), then sync from Supabase
+function loadFromCache(){
+  _completions = load('completions', {});
+  _notes = load('notes', {});
+  _prs = load('prs', _prs);
+  _sets = load('sets', {});
+}
 
 // ═══════════════════════════════════════════════════════════
 // CLOCK + DATE
@@ -1453,17 +1558,6 @@ function updatePctBadge(input){
   }
 }
 
-// ── SET LOG STORAGE ──
-function getSetLog(eid){
-  return load('sets',{})[eid] || {};
-}
-function logSet(eid, setNum, field, val){
-  const all = load('sets',{});
-  if(!all[eid]) all[eid] = {};
-  if(!all[eid][setNum]) all[eid][setNum] = {};
-  all[eid][setNum][field] = val;
-  save('sets', all);
-}
 
 function markComplete(){
   const done = !isComplete(curWeek, curDay);
@@ -1594,13 +1688,20 @@ function chgWeek(dir){
 // ═══════════════════════════════════════════════════════════
 // BOOT
 // ═══════════════════════════════════════════════════════════
-function startApp(){
+async function startApp(){
+  // 1. Load from local cache (instant UI)
+  loadFromCache();
+  
   const c = calcCurrentWeek();
   curWeek = c.week;
   curDay = c.day;
   updateClock();
   setInterval(updateClock, 1000);
   renderAll();
+
+  // 2. Sync from Supabase in background (permanent source of truth)
+  await loadFromSupabase();
+  renderAll(); // Re-render with fresh data from DB
 }
 </script>
 </body>
