@@ -1137,9 +1137,11 @@ async function sb(endpoint, method, body){
       'apikey': SB_KEY,
       'Authorization': 'Bearer ' + SB_KEY,
       'Content-Type': 'application/json',
-      'Prefer': method === 'POST' ? 'resolution=merge-duplicates,return=representation' : 'return=representation'
+      'Prefer': 'return=representation'
     }
   };
+  if(method === 'POST') opts.headers['Prefer'] = 'resolution=merge-duplicates,return=representation';
+  if(method === 'PATCH') opts.headers['Prefer'] = 'return=representation';
   if(body) opts.body = JSON.stringify(body);
   try {
     const r = await fetch(SB_URL + '/rest/v1/' + endpoint, opts);
@@ -1163,7 +1165,10 @@ function setCompletion(w,d,v){
   const key = w+'_'+d;
   _completions[key] = v;
   save('completions', _completions);
-  sb('completions', 'POST', {week_day: key, completed: !!v});
+  sb(`completions?week_day=eq.${encodeURIComponent(key)}`, 'PATCH', {completed: !!v})
+    .then(res => {
+      if(!res || res.length === 0) sb('completions', 'POST', {week_day: key, completed: !!v});
+    });
 }
 
 // ── NOTES ──
@@ -1173,7 +1178,10 @@ function setNote(w,d,txt){
   const key = w+'_'+d;
   _notes[key] = txt;
   save('notes', _notes);
-  sb('session_notes', 'POST', {week_day: key, note: txt});
+  sb(`session_notes?week_day=eq.${encodeURIComponent(key)}`, 'PATCH', {note: txt})
+    .then(res => {
+      if(!res || res.length === 0) sb('session_notes', 'POST', {week_day: key, note: txt});
+    });
 }
 
 // ── PRs ──
@@ -1185,7 +1193,10 @@ function getPRs(){ return _prs; }
 function setPR(name,val){
   _prs[name] = val;
   save('prs', _prs);
-  sb('prs', 'POST', {exercise: name, weight: val});
+  sb(`prs?exercise=eq.${encodeURIComponent(name)}`, 'PATCH', {weight: val})
+    .then(res => {
+      if(!res || res.length === 0) sb('prs', 'POST', {exercise: name, weight: val});
+    });
 }
 
 // ── SET LOGS ──
@@ -1196,9 +1207,17 @@ function logSet(eid, setNum, field, val){
   if(!_sets[eid][setNum]) _sets[eid][setNum] = {};
   _sets[eid][setNum][field] = val;
   save('sets', _sets);
-  // Build the row for Supabase
+  // Always send BOTH wt and reps so neither gets overwritten with empty
   const row = _sets[eid][setNum];
-  sb('set_logs', 'POST', {eid: eid, set_num: setNum, wt: row.wt||'', reps: row.reps||''});
+  const payload = {eid: eid, set_num: parseInt(setNum), wt: row.wt||'', reps: row.reps||''};
+  // First try PATCH (update existing row)
+  sb(`set_logs?eid=eq.${encodeURIComponent(eid)}&set_num=eq.${setNum}`, 'PATCH', {wt: row.wt||'', reps: row.reps||''})
+    .then(res => {
+      // If PATCH returned empty (no existing row), do POST to insert
+      if(!res || res.length === 0){
+        sb('set_logs', 'POST', payload);
+      }
+    });
 }
 
 // ═══════════════════════════════════════════════════════════
