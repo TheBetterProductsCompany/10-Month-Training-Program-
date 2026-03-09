@@ -581,7 +581,7 @@ function getPhase1Day(w, dayIdx){
         E('Power Clean',sqVol,'Triple extension — hip to shoulder sequencing'),
         E('Front Squat',deload?'3×3 @ 60%':w<=2?'4×5 @ 70%':w<=4?'4×4 @ 75%':'4×3 @ 80%','Anterior pillar — upright posture king'),
         E('BB Hip Thrust',deload?'3×6 @ 60%':'4×8 @ '+int,'Glute force — sprinting/rotation engine'),
-        E('Banded Pull-Throughs','3 × 12','Posterior chain groove — zero spinal shear'),
+        E('Hamstring Ground Push & Pull','3 × 12','Superior hamstring loading pattern — push & pull'),
       ],
       conditioning:[E('Reverse Hypers','3 × 12','Spinal decompression after every heavy squat session')]
     },
@@ -607,7 +607,10 @@ function getPhase1Day(w, dayIdx){
         E('Pendlay Row',deload?'3×5 @ 60%':'5×5 @ '+(w<=2?'65%':w<=4?'70%':w<=6?'75%':'80%'),'Horizontal pulling power — progress 5 lbs/week'),
         E('Weighted Pull-ups',deload?'3×5 BW':'4×5 @ +50 lbs','Vertical density — lat length'),
         E('Chin-ups','3 × 8 bodyweight','Supinated grip — bicep tendon + different lat angle'),
-        E('Serratus Wall Slides','3 × 12','Fixes scapular winging — shoulder health for club path'),
+        E('DB Shoulder Press',deload?'3×8 light':'4×8 @ moderate','Direct shoulder strength — overhead stability for golf'),
+        E('DB Pullovers','3 × 12','Better ROM — shoulder-safe arc — golf asymmetry correction'),
+        E('Band External Rotations','3 × 15 each','Rotator cuff protection as club speed climbs'),
+        E('Y/T/W Raises','2 × 8 each position','Lower trap + scapular stability for backswing'),
       ],
       conditioning:[E('Farmer\'s Carries','4 × 40m','Total body tension — grip endurance')]
     },
@@ -615,13 +618,15 @@ function getPhase1Day(w, dayIdx){
       title:'SNATCH REMEDIATION',
       focus:'Snatch from Hang + Box Back Squat + Glutes',
       duration:'75-85 min',
-      warmup:[E('Snatch Grip Deadlift','3 × 5 @ light','Pattern groove — wide grip activation'),E('Overhead Squat Hold','3 × 20 sec','Overhead stability check'),E('Hip 90/90','2 min each side','Internal rotation prep')],
+      warmup:[E('Snatch Grip Deadlift','3 × 5 @ light','Pattern groove — wide grip activation'),E('Hip 90/90','2 min each side','Internal rotation prep')],
       core:coreBlock.slice(0,3),
       main:[
         E('Hang Snatch',w<=2?'5×3 empty bar technique':w<=4?'5×3 @ '+snatchLoad:'5×2 @ '+snatchLoad,'115 lb snatch at your strength = technique gap. Fix it here.'),
+        E('Overhead Squat',deload?'3×5 @ bar only':'4×5 @ 60-65%','Full depth — overhead stability + thoracic mobility'),
+        E('Snatch Pull',deload?'3×5 light':'4×4 @ 70-75%','Full extension pull — speed through the middle'),
         E('Box Back Squat',sqVol,'Absolute force engine — pause at box'),
         E('BB Hip Thrust',deload?'3×6 @ 60%':'4×6 @ '+int,'Glute force production'),
-        E('Hyper Extensions','3 × 12','Posterior core endurance'),
+        E('Face Pulls','3 × 12','Posterior delt + external rotator + serratus'),
       ],
       conditioning:[E('Reverse Hypers','3 × 12','Spinal decompression — non-optional maintenance')]
     },
@@ -691,8 +696,8 @@ function getPhase2Day(w, dayIdx){
       main:[
         E('Box Back Squat',sqProto,'Eastern Bloc wave loading — rest 3-4 min between top sets'),
         E('BB Hip Thrust',deload?'3×6@65%':'4×6 @ 80-85%','Glute force engine'),
-        E('Banded Pull-Throughs','3 × 15','Posterior chain groove'),
-        E('Hyper Extensions','3 × 15','Posterior core endurance — add weight when possible'),
+        E('Hamstring Ground Push & Pull','3 × 15','Superior hamstring loading pattern'),
+        E('Face Pulls','3 × 15','Posterior delt + external rotator + serratus — add weight when possible'),
       ],
       conditioning:[E('Reverse Hypers','3 × 12','Spinal decompression — after every heavy squat')]
     },
@@ -703,16 +708,20 @@ function getPhase2Day(w, dayIdx){
         E('Pendlay Row','5×5 progressing weekly','Start 65% est 1RM — add 5 lbs/week minimum'),
         E('Weighted Pull-ups','4×5 @ '+pullWeight,'Vertical density — lat length-tension'),
         E('Chin-ups','3 × 8 BW','Supinated lat recruitment + bicep tendon health'),
-        E('Serratus Wall Slides','3 × 12','After every upper session — scapular winging fix'),
+        E('DB Pullovers','3 × 12','Better ROM — shoulder-safe arc — golf asymmetry'),
+        E('Band External Rotations','3 × 15 each','Rotator cuff protection'),
+        E('Y/T/W Raises','2 × 8 each position','Lower trap + scapular stability'),
         E('Farmer\'s Carries','4 × 40m heavy','Total body tension + grip'),
       ],
       conditioning:[]
     },
-    2: { title:'OLYMPIC LIFT DAY', focus:'Power Clean + Snatch + Front Squat', duration:'80-90 min',
-      warmup:[E('Snatch Grip DL','3×3 light','Pattern groove'),E('Muscle Clean','2×5','Pathway warm-up'),E('OHS Hold','2×20 sec','Overhead stability')],
+    2: { title:'OLYMPIC LIFT DAY', focus:'Power Clean + Snatch + Front Squat + OHS', duration:'80-90 min',
+      warmup:[E('Snatch Grip DL','3×3 light','Pattern groove'),E('Muscle Clean','2×5','Pathway warm-up')],
       core:coreP2,
       main:[
         E('Power Clean + Snatch',cleanSnatch,'Technique + loading progression'),
+        E('Overhead Squat',deload?'3×5 light':'4×4 @ 65-75%','Full depth overhead — mobility + stability'),
+        E('Snatch Pull',deload?'3×4 light':'4×3 @ 78-83%','Full extension — speed through the middle'),
         E('Front Squat',deload?'3×3@65%':'4×4 @ 78-85%','Anterior pillar king — upright posture'),
         E('Kneeling Landmine Rot. Press','3 × 10 each','Spiral line force'),
       ],
@@ -736,7 +745,8 @@ function getPhase2Day(w, dayIdx){
       main:[
         E('Flat Bench Press',deload?'3×5@65%':'5×5 @ 78-85%','Horizontal pressing power'),
         E('Landmine Press','4 × 8 each arm','Spiral-line activation — shoulder-safe arc'),
-        E('Dips',deload?'3×8 BW':'4 × 8-10 weighted','Triceps + lower pec development'),
+        E('DB Shoulder Press',deload?'3×8 light':'4×8 @ moderate-heavy','Direct shoulder strength — overhead pressing power'),
+        E('Handstand Push-up Progression',deload?'3×6 pike push-ups':'4 × 6-8','Direct shoulder demand + skill development'),
       ],
       conditioning:[E('Sled Push/Pull','6 × 20m','Pure force — zero joint compression recovery')]
     },
@@ -793,7 +803,7 @@ function getPhase3Day(w, dayIdx){
         E('Box Back Squat — Work to Daily Max','~5-7 sets to technical max','Form breaks = that\'s the max. Not a grind max.'),
         E('Box Back Squat Back-off','3×3 @ 90% of daily max','Quality reps — no grinding'),
         E('BB Hip Thrust ('+tripPhase+')',tripProto,'Triphasic loading — glute force'),
-        E('Hyper Extensions','3 × 12-15','Posterior core endurance'),
+        E('Face Pulls','3 × 12-15','Posterior delt + external rotator + serratus'),
       ],
       conditioning:[E('Reverse Hypers','3 × 12','Spinal decompression — non-optional')]
     },
@@ -820,12 +830,14 @@ function getPhase3Day(w, dayIdx){
       ],
       conditioning:[]
     },
-    3: { title:'SNATCH DAILY MAX', focus:'Snatch Max + Back-offs + Accessories', duration:'80-90 min',
-      warmup:[E('Snatch Grip DL','3×3','Wide grip warm-up'),E('Hang Snatch','3×2 @ 60%','Speed + position'),E('OHS','2×3','Overhead stability')],
+    3: { title:'SNATCH DAILY MAX', focus:'Snatch Max + OHS + Snatch Pull + Accessories', duration:'85-95 min',
+      warmup:[E('Snatch Grip DL','3×3','Wide grip warm-up'),E('Hang Snatch','3×2 @ 60%','Speed + position')],
       core:coreP3.slice(2,4),
       main:[
         E('Snatch — Work to Daily Max','~6-8 sets to technical max','Vertical RFD — overhead stability'),
         E('Snatch Back-off','3×2 @ 87% of daily max','Crisp reception — no forward lean'),
+        E('Overhead Squat','4×3 @ 75-80%','Full depth — express overhead stability built from snatch'),
+        E('Snatch Pull','4×3 @ 83-87%','Full extension — speed + power through the middle'),
         E('Deficit Reverse Lunge','4×6 each @ heavy','Greater hip flexor + glute demand'),
         E('Nordic Curls','4 × 5','Eccentric hamstring protection'),
       ],
@@ -840,6 +852,7 @@ function getPhase3Day(w, dayIdx){
         E('Power Clean — Work to Daily Max','~5-7 sets','Back-to-back CNS loading'),
         E('Power Clean Back-off','3×2 @ 88%','Quality'),
         E('Bench Press','4×4 @ 82-87%','Maintain pressing strength'),
+        E('DB Shoulder Press','4×6 @ moderate-heavy','Direct overhead pressing — shoulder strength'),
       ],
       conditioning:[E('Reverse Hypers','3 × 15','Decompress — long session')]
     },
@@ -900,7 +913,7 @@ function getPhase4Day(w, dayIdx){
         E('→ Trap Bar Jump','4×4','8-10 sec transition — loaded vertical'),
         E('Weighted Pull-ups','4×3 @ +65-75 lbs','Heavy vertical density'),
       ],
-      conditioning:[E('Serratus Wall Slides','3×12','Scapular health maintenance')]
+      conditioning:[E('DB Pullovers','3×12','Shoulder-safe arc — lat stretch — golf asymmetry'),E('Band External Rotations','3×15 each','Rotator cuff protection'),E('Y/T/W Raises','2×8 each','Lower trap + scapular stability')]
     },
     2: { title:'SPRINT + CONDITIONING', focus:'Sprint Blocks + Rowing Intervals', duration:'75-85 min',
       warmup:[E('A-Skip / B-Skip','3×20m each','Sprint mechanics prep'),E('Ankle Pogo Jumps','2×15','Stiffness')],
@@ -932,7 +945,8 @@ function getPhase4Day(w, dayIdx){
         E('Lateral MB Throws','6×5 each side','Lag storage in backswing — clubhead speed transfer'),
         E('Kneeling Landmine Rot. Press','4×6 each','Spiral line — hip drive emphasis'),
         E('Bench Press','4×4 @ 83-87%','Maintain pressing strength'),
-        E('Dips','3×8-10 weighted','Triceps + lower pec'),
+        E('DB Shoulder Press','4×6 @ heavy','Direct overhead — shoulder strength peak'),
+        E('Handstand Push-up Progression','3×6-8','Direct shoulder demand + skill development'),
       ],
       conditioning:[]
     },
@@ -942,6 +956,8 @@ function getPhase4Day(w, dayIdx){
       main:[
         E('Power Clean','4×2 @ 87-90%','Triple extension — express power'),
         E('Snatch','4×2 @ 83-87%','Vertical RFD expression'),
+        E('Overhead Squat','3×3 @ 78-83%','Full depth overhead — peak stability expression'),
+        E('Snatch Pull','3×3 @ 85-88%','Full extension — peak power through middle'),
         E('Depth Jumps','4×5','Reactive stiffness — amortization'),
         E('Broad Jumps','4×4','Horizontal power'),
         E('Sprints 40m','4×40m @ max effort','Full speed expression'),
@@ -981,7 +997,7 @@ function getPhase5Day(w, dayIdx){
     const days = {
       0: { title:'MOVEMENT QUALITY', focus:'Light Squat + Mobility + Golf Application', duration:'50-60 min',
         warmup:[E('Full Dynamic Warm-up','10 min','Movement quality focus')],core:[E('Bird Dogs','3×10 each','Spinal stability'),E('Dead Bug','3×10 each','Anti-extension')],
-        main:[E('Box Back Squat','3×5 @ 60-65%','Perfect form — zero grind'),E('Front Squat','3×5 @ 60-65%','Upright posture check'),E('Banded Pull-Throughs','3×15','Posterior groove')],
+        main:[E('Box Back Squat','3×5 @ 60-65%','Perfect form — zero grind'),E('Front Squat','3×5 @ 60-65%','Upright posture check'),E('Hamstring Ground Push & Pull','3×15','Posterior groove')],
         conditioning:[E('Reverse Hypers','3×12','Spinal maintenance')]
       },
       1: { title:'LIGHT UPPER', focus:'Maintenance Volume + Mobility', duration:'45-55 min',
@@ -1087,14 +1103,17 @@ function getPhase5Day(w, dayIdx){
       ],
       conditioning:[E('Farmer\'s Carries','4×40m heavy','Grip + tension peak')]
     },
-    4: { title:'UPPER PRESS + POWER', focus:'Bench + Landmine Press + Dips', duration:'70-80 min',
+    4: { title:'UPPER PRESS + POWER', focus:'Bench + Landmine Press + HSPU', duration:'70-80 min',
       warmup:[E('Band Work + Push-ups','5 min','Press prep')],
       core:[E('Ab Roller','3×10','Maintenance'),E('Side Plank','3×12 each','Anti-sway')],
       main:[
         E('Bench Press','4×3 @ '+int,'Horizontal press peak'),
+        E('DB Shoulder Press','4×5 @ heavy','Direct overhead pressing — peak strength'),
         E('Landmine Press','4×6 each arm @ heavy','Spiral-line peak'),
-        E('Dips','4×6-8 weighted heavy','Triceps + lower pec peak'),
-        E('Serratus Wall Slides','3×12','Scapular maintenance'),
+        E('Handstand Push-up Progression','4×6-8','Shoulder demand peak — progress toward freestanding'),
+        E('DB Pullovers','3×12','DB Pullovers — shoulder-safe arc'),
+        E('Band External Rotations','3×15 each','Rotator cuff protection — peak phase'),
+        E('Y/T/W Raises','2×8 each','Lower trap + scapular stability'),
       ],
       conditioning:[E('Sled Push','4×20m','Active recovery tool')]
     },
