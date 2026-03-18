@@ -609,153 +609,232 @@ if(localStorage.getItem('r42auth')==='1'){
 // ═══════════════════════════════════════════════════════════
 // PROGRAM DATA — THE RELENTLESS 42 FULL 40-WEEK PROTOCOL
 // ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// YEAR 1 — THE ORGANISM REBUILT — 48 WEEKS
+// ═══════════════════════════════════════════════════════════
+
 const DAYS = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
 const DAYNAMES = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
 
-// Phase definitions
 const PHASES = [
-  {n:'FOUNDATION', wks:[1,8], desc:'GPP + Structural Balance — Fix core, hips, snatch mechanics. Build aerobic base.'},
-  {n:'STRENGTH ACCUMULATION', wks:[9,16], desc:'Max Strength Hypertrophy — Eastern Bloc linear periodization. Heavy volume. Romanian loading wave.'},
-  {n:'POWER CONVERSION', wks:[17,24], desc:'Strength → Explosiveness — Bulgarian daily maxes. Triphasic loading. Cluster sets.'},
-  {n:'INTEGRATION', wks:[25,32], desc:'Athletic Mastery — Complex/contrast pairs. Sprint mechanics. Full kinetic chain sequencing.'},
-  {n:'PEAK + TEST', wks:[33,40], desc:'Express & Measure Everything — Taper into maximal performance. Test all 1RMs, sprint times, club speed.'}
+  {n:'STRUCTURAL REBUILD', wks:[1,12], desc:'Fix every compensation. Right-side protocol daily. Mobility under load. Snatch from empty bar. Aerobic base. Gait retraining. Positions before percentages.'},
+  {n:'STRENGTH THROUGH RANGE', wks:[13,22], desc:'Positions earned — loads climb. Eastern Bloc wave loading. Cossack squat gets loaded. Olympic lifts progress. Sprint work begins.'},
+  {n:'POWER CONVERSION', wks:[23,32], desc:'Bulgarian daily maxes through FULL range only. Triphasic loading. Rotational power peaks. Rowing intervals intensify.'},
+  {n:'ATHLETIC INTEGRATION', wks:[33,42], desc:'Complex/contrast pairs. Sprint mechanics sharpen. Full kinetic chain expression. Clubhead speed testing monthly.'},
+  {n:'YEAR 1 PEAK + TEST', wks:[43,48], desc:'Test every number. Establish Year 2 baselines. Active deload. Assess right-side progress.'}
 ];
 
 function getPhase(w){return PHASES.find(p=>w>=p.wks[0]&&w<=p.wks[1])||PHASES[0];}
 function getPhaseNum(w){return PHASES.findIndex(p=>w>=p.wks[0]&&w<=p.wks[1])+1;}
-
-// ── Helper to build exercise objects ──
 function E(name,detail,note){return{name,detail,note:note||''};}
 
 // ═══════════════════════════════════════════════════════════
-// PHASE 1: WEEKS 1-8
+// RIGHT-SIDE PROTOCOL — before every session
+// ═══════════════════════════════════════════════════════════
+const rightSideA = [
+  E('Lacrosse Ball Right Forearm','60 sec','Scar tissue adhesion — breathe into the knots'),
+  E('Right Wrist CARs','10 circles each direction','Maximum range — slow and controlled'),
+  E('Sleeper Stretch — Right Shoulder','60 sec','Right side down — gentle IR pressure'),
+  E('Foam Roll Right IT Band','60 sec','Slow — release the restriction'),
+  E('Right Hip IR PAILs/RAILs','90 sec','90/90 — contract 10s, relax 10s deeper, 4x'),
+];
+const rightSideB = [
+  E('Finger Spread Band — Right Hand','2 × 15','Opens fascial chain from knife scar'),
+  E('Cross-Body Stretch — Right Shoulder','60 sec','Doorframe or band-assisted'),
+  E('Band Pull-Aparts (Right Scap Focus)','2 × 15','Right scapular retraction priority'),
+  E('Pigeon Stretch — Right Side','90 sec','Deep right hip opener'),
+  E('Right Glute Med Clamshell','2 × 15','Band — right side only'),
+];
+
+// ═══════════════════════════════════════════════════════════
+// GOLF SWING LOADING DRILLS
+// ═══════════════════════════════════════════════════════════
+const swingMechanics = [
+  E('Trail Hip Loading Drill','3 × 8 each side','Golf stance — shift into right hip, hold 3 sec. Right knee stays over ankle. Lumbar stays neutral. Feel the load in the right glute, not the lower back.'),
+  E('Split Stance Anti-Rotation Hold','3 × 20 sec each','Cable or band at chest height. Golf stance. Resist rotation while loaded into trail hip. Store the energy — don\'t release early.'),
+  E('Right Hip IR Loaded (90/90 + plate)','2 × 10 each','Plate in hands. Drive right femur into internal rotation. This is where your backswing load lives.'),
+  E('Lateral MB Throw from Golf Stance','4 × 5 each side','Address position. Trail hip loads FIRST. Hip fires, hands follow. Not arms — hips.'),
+  E('Step-Through Rotational Slam','3 × 6 each','MB slam with follow-through step. Weight transfers trail → lead through the ground. This IS the downswing.'),
+];
+
+// ═══════════════════════════════════════════════════════════
+// GAIT / PREDATOR PROTOCOL
+// ═══════════════════════════════════════════════════════════
+const gaitProtocol = [
+  E('Banded March','3 × 20 steps','Heavy band around feet. Exaggerated hip flexion. Hip DRIVES the knee — not the quad.'),
+  E('Single-Leg Glute Bridge March','3 × 8 each','Bridge on one leg. March opposite knee to chest. Pelvis stays LEVEL — zero drop.'),
+  E('Overhead Loaded Walking Lunge','3 × 8 each','DB or plate overhead. Forces pelvis to stabilize under load during locomotion. This fixes top-heavy.'),
+  E('Backward Sled Drag','4 × 20m','Posterior chain drives locomotion. This builds the stalking quality.'),
+  E('Barefoot Walking Drill','5 min','Heel-to-toe on a line. Slow. Deliberate. Feel every foot strike. The panther places each foot with intent.'),
+];
+
+// ═══════════════════════════════════════════════════════════
+// REUSABLE BLOCKS
+// ═══════════════════════════════════════════════════════════
+function coreBlock(phase){
+  if(phase<=1) return [
+    E('Bird Dogs','3 × 10 each side','Zero lumbar rotation — build the foundation'),
+    E('Dead Bug','3 × 10 each side','Lower back FLAT into floor at all times'),
+    E('Ab Roller (kneeling)','4 × 6-8','From knees — earn full extension over 12 weeks'),
+    E('Side Plank Dynamic','3 × 10 dips each','Hips level — golf anti-sway pattern'),
+    E('Landmine Rotation','3 × 8 each','Hips SQUARE — rotate T-spine ONLY'),
+    E('Hanging Leg Raises','3 × 8-12','Posterior pelvic tilt before lifting'),
+    E('Copenhagen Dips','3 × 6-10 each','Slow eccentric 3 sec — adductor bulletproofing'),
+  ];
+  if(phase<=2) return [
+    E('Ab Roller','4 × 10','Progress toward full extension'),
+    E('Side Plank Dynamic','3 × 12 each','Increased reps — anti-sway'),
+    E('Landmine Rotation','3 × 10 each','Heavier than Phase 1'),
+    E('Hanging Leg Raises','3 × 12','Full range — toes to bar goal'),
+    E('Copenhagen Dips','3 × 10 each','Progressive overload'),
+  ];
+  if(phase<=3) return [
+    E('Ab Roller (extended)','4 × 10','From toes if capable'),
+    E('Side Plank Dynamic','3 × 15 each','Peak anti-sway'),
+    E('Landmine Rotation (heavy)','4 × 8 each','Progressive overload on transverse'),
+    E('Hanging Leg Raises','4 × 10','Full ROM mastery'),
+  ];
+  return [
+    E('Ab Roller (full extension)','4 × 12','From toes — full anti-extension'),
+    E('Side Plank Dynamic','3 × 15 each','Maintenance'),
+    E('Landmine Rotation (heavy)','4 × 8 each','Transverse torque'),
+    E('Hanging Leg Raises','4 × 12','Toes to bar'),
+  ];
+}
+
+function mobilityBlock(phase){
+  return [
+    E('Hip 90/90 Rotations',phase>=3?'3 min each side':'2 min each side','Most important mobility drill — non-negotiable daily'),
+    E('Kneeling T-Spine Opener','12 reps each side','Golf lives in thoracic rotation'),
+    E('PVC Over and Back','3 × 10','Shoulder girdle health'),
+    E('Forward Split Holds',phase>=3?'4 × 60 sec each':'3 × 45 sec each','Progress 1cm per week'),
+    E('Lateral Split Holds',phase>=3?'3 × 60 sec':'3 × 45 sec','Hip base development'),
+    E('Ankle Dorsiflexion Drill','3 × 15 each','Non-negotiable for squat depth + sprint mechanics'),
+    E('Reverse Crab Reaches','3 × 10 each','Anterior chain opening — shoulder health'),
+    E('DB Goblet Squat Duck Walk','3 × 10 steps each direction','Loaded ankle dorsiflexion + hip mobility under movement'),
+  ];
+}
+
+// ═══════════════════════════════════════════════════════════
+// PHASE 1: STRUCTURAL REBUILD (Weeks 1-12)
 // ═══════════════════════════════════════════════════════════
 function getPhase1Day(w, dayIdx){
-  const deload = (w===4||w===8);
-  const int = deload ? '55-62%' : w<=2 ? '65-75%' : w<=3 ? '75-80%' : w<=6 ? '78-85%' : '83-87%';
+  const deload = (w===4||w===8||w===12);
+  const int = deload?'55-62%':w<=3?'60-70%':w<=6?'65-75%':w<=9?'70-78%':'75-82%';
+  const snatchLoad = w<=2?'Empty bar':w<=4?'Bar + 10s technique':w<=6?'60%':w<=8?'65%':w<=10?'70%':'73%';
+  const sqVol = w<=3?'4×6 @ 65%':w<=4?'3×5 @ 60%':w<=6?'4×5 @ 70%':w<=8?'3×3 @ 60%':w<=9?'4×5 @ 75%':w<=10?'5×4 @ 78%':w<=11?'4×3 @ 80%':'3×3 @ 62%';
 
-  const coreBlock = [
-    E('Bird Dogs','3 × 8 each side','Zero lumbar rotation — opposite arm/leg'),
-    E('Dead Bug','3 × 8 each side','Lower back FLAT into floor at all times'),
-    E('Ab Roller (kneeling)','4 × 6-8 reps','From knees until 3×12 achieved'),
-    E('Side Plank Dynamic','3 × 10 dips each','Hips level — no pike or sag'),
-    E('Landmine Rotation','3 × 8 each side','Hips STAY SQUARE — rotate T-spine only'),
-    E('Hanging Leg Raises','3 × 8-12','Posterior pelvic tilt before lifting'),
-    E('Copenhagen Dips','3 × 6-10 each','Slow eccentric 3 seconds'),
-  ];
-
-  const mobilityBlock = [
-    E('Hip 90/90 Rotations','2 min each side','Most important mobility drill — non-negotiable daily'),
-    E('Kneeling T-Spine Opener','10 reps each side','Golf lives in thoracic rotation'),
-    E('PVC Over and Back','3 × 10','Shoulder girdle prep'),
-    E('Forward Split Holds','3 × 45 sec each side','Progress 1cm per week'),
-    E('Lateral Split Holds','3 × 45 sec','Hip base development'),
-    E('Ankle Dorsiflexion Drill','3 × 15 each side','Non-negotiable for sprint & squat depth'),
-    E('Reverse Crab Reaches','3 × 8 each side','Anterior chain opening'),
-  ];
-
-  // Snatch loading by week
-  const snatchLoad = w<=1?'Empty bar technique':w<=2?'60% of max':w<=3?'65%':deload&&w===4?'Technique only':w<=5?'70%':w<=6?'75%':w<=7?'79%':'Light + fast';
-  // Squat/Clean volume by week
-  const sqVol = w<=1?'4×6 @ 70%':w<=2?'4×5 @ 73%':w<=3?'5×5 @ 76%':w===4?'3×3 @ 60%':w<=5?'5×4 @ 79%':w<=6?'5×3 @ 83%':w<=7?'4×3 @ 86%':'3×2 @ 62%';
+  const core = coreBlock(1);
+  const mob = mobilityBlock(1);
 
   const days = {
-    0: { // MON — Lower Power
-      title:'LOWER POWER',
-      focus:'Power Clean + Front Squat + Core',
-      duration:'75-85 min',
-      warmup:[E('Foam Roll Lower Body','5 min','Quads, glutes, IT band, adductors'),E('Band Pull-Aparts','2 × 15','Shoulder activation'),E('Goblet Squat Hold','2 × 30 sec','Hip opener + ankle mobility')],
-      core:coreBlock.slice(0,4),
+    0: { // MON — Lower Power + Mobility Focus
+      title:'LOWER POWER + MOBILITY',
+      focus:'Power Clean + Front Squat + Goblet Duck Walks + Core',
+      duration:'80-90 min',
+      warmup: (dayIdx%2===0?rightSideA:rightSideB),
+      core: core.slice(0,4),
       main:[
-        E('Power Clean',sqVol,'Triple extension — hip to shoulder sequencing'),
-        E('Front Squat',deload?'3×3 @ 60%':w<=2?'4×5 @ 70%':w<=4?'4×4 @ 75%':'4×3 @ 80%','Anterior pillar — upright posture king'),
-        E('BB Hip Thrust',deload?'3×6 @ 60%':'4×8 @ '+int,'Glute force — sprinting/rotation engine'),
-        E('Hamstring Ground Push & Pull','3 × 12','Superior hamstring loading pattern — push & pull'),
+        E('DB Goblet Squat Hold','3 × 30 sec','Deep hold — feel the ankles. This exposes your restrictions. Own this position.'),
+        E('DB Goblet Squat Duck Walk','3 × 10 steps each direction','Loaded mobility under movement — ankles, hips, quads all working'),
+        E('Power Clean',sqVol,'Triple extension — if position breaks, drop weight. Positions > percentages.'),
+        E('Front Squat',deload?'3×5 @ 55%':w<=4?'4×6 @ 65%':w<=8?'4×5 @ 70%':'4×4 @ 75%','Full depth — heels down, elbows high. If ankles collapse, go lighter.'),
+        E('BB Hip Thrust',deload?'3×8 @ 55%':'4×8 @ '+int,'Glute force — sprinting/rotation engine'),
+        E('Hamstring Ground Push & Pull','3 × 12','Superior hamstring loading pattern'),
       ],
-      conditioning:[E('Reverse Hypers','3 × 12','Spinal decompression after every heavy squat session')]
+      conditioning:[E('Reverse Hypers','3 × 12','Spinal decompression — after every squat session')]
     },
-    1: { // TUE — Aerobic / Mobility
-      title:'AEROBIC / MOBILITY',
-      focus:'Row + Full Mobility Sequence',
-      duration:'60-70 min',
-      warmup:[E('Light Row','5 min @ Z1','Build into pace gradually')],
-      core:coreBlock.slice(0,3),
-      main:[
-        E('Row',w<=2?'5×5min @ Zone 2':w<=4?'5×6min @ Zone 2':w<=6?'Row 30min @ Z1-Z2':'4×8min @ Z2-Z3','Cardiac output — aerobic base building'),
-        E('KOT Lunge','3 × 8 each side','Knee health — patellar tendon bulletproofing'),
-      ],
-      conditioning:mobilityBlock
-    },
-    2: { // WED — Upper Pull + Core
-      title:'UPPER PULL + CORE',
-      focus:'Pendlay Row + Pull-ups + Chin-ups + Core Circuit',
+    1: { // TUE — Aerobic + Gait + Mobility
+      title:'AEROBIC + GAIT RETRAINING',
+      focus:'Row + Predator Protocol + Full Mobility',
       duration:'70-80 min',
-      warmup:[E('Band Dislocates','2 × 12','Shoulder girdle prep'),E('Scap Pull-ups','2 × 8','Activate lats + lower traps'),E('Light Row','3 min','Blood flow')],
-      core:coreBlock.slice(3,7),
+      warmup: (dayIdx%2===0?rightSideA:rightSideB),
+      core: core.slice(0,3),
       main:[
-        E('Pendlay Row',deload?'3×5 @ 60%':'5×5 @ '+(w<=2?'65%':w<=4?'70%':w<=6?'75%':'80%'),'Horizontal pulling power — progress 5 lbs/week'),
-        E('Weighted Pull-ups',deload?'3×5 BW':'4×5 @ +50 lbs','Vertical density — lat length'),
-        E('Chin-ups','3 × 8 bodyweight','Supinated grip — bicep tendon + different lat angle'),
-        E('DB Shoulder Press',deload?'3×8 light':'4×8 @ moderate','Direct shoulder strength — overhead stability for golf'),
-        E('DB Pullovers','3 × 12','Better ROM — shoulder-safe arc — golf asymmetry correction'),
-        E('Band External Rotations','3 × 15 each','Rotator cuff protection as club speed climbs'),
+        E('Row',w<=4?'5×5min @ Zone 2':w<=8?'5×6min @ Zone 2':'4×8min @ Z2-Z3','Cardiac output — aerobic base. Keep heart rate in Z2.'),
+        E('KOT Lunge','3 × 8 each','Knee health — patellar tendon bulletproofing'),
+        ...gaitProtocol,
+      ],
+      conditioning: mob
+    },
+    2: { // WED — Upper Pull + Core + Shoulder Health
+      title:'UPPER PULL + SHOULDER HEALTH',
+      focus:'Pendlay Row + Pull-ups + Chin-ups + DB Shoulder Press + Shoulder Trio',
+      duration:'75-85 min',
+      warmup: (dayIdx%2===0?rightSideA:rightSideB),
+      core: core.slice(3,7),
+      main:[
+        E('Pendlay Row',deload?'3×5 @ 55%':'5×5 @ '+(w<=4?'60%':w<=8?'65%':'70%'),'Horizontal pulling — progress 5 lbs/week when form is perfect'),
+        E('Weighted Pull-ups',deload?'3×5 BW':w<=6?'4×6 @ +15 lbs':'4×5 @ +25 lbs','Build from lighter than before — earn every pound with full ROM'),
+        E('Chin-ups',deload?'3×5 BW':'3 × 8 bodyweight','Supinated grip — bicep tendon + lat angle your hockey body never built'),
+        E('DB Shoulder Press',deload?'3×8 light':w<=6?'4×8 @ 50 lbs':'4×8 @ 60 lbs','Direct shoulder strength — build the right shoulder to match the left'),
+        E('DB Pullovers','3 × 12','Shoulder-safe arc — golf asymmetry correction'),
+        E('Face Pulls','3 × 15','Posterior delt + external rotator + serratus — all in one'),
+        E('Band External Rotations','3 × 15 each','Rotator cuff protection — critical for right shoulder recovery'),
         E('Y/T/W Raises','2 × 8 each position','Lower trap + scapular stability for backswing'),
       ],
       conditioning:[E('Farmer\'s Carries','4 × 40m','Total body tension — grip endurance')]
     },
-    3: { // THU — Snatch Remediation
-      title:'SNATCH REMEDIATION',
-      focus:'Snatch from Hang + Box Back Squat + Glutes',
-      duration:'75-85 min',
-      warmup:[E('Snatch Grip Deadlift','3 × 5 @ light','Pattern groove — wide grip activation'),E('Hip 90/90','2 min each side','Internal rotation prep')],
-      core:coreBlock.slice(0,3),
-      main:[
-        E('Hang Snatch',w<=2?'5×3 empty bar technique':w<=4?'5×3 @ '+snatchLoad:'5×2 @ '+snatchLoad,'115 lb snatch at your strength = technique gap. Fix it here.'),
-        E('Overhead Squat',deload?'3×5 @ bar only':'4×5 @ 60-65%','Full depth — overhead stability + thoracic mobility'),
-        E('Snatch Pull',deload?'3×5 light':'4×4 @ 70-75%','Full extension pull — speed through the middle'),
-        E('Box Back Squat',sqVol,'Absolute force engine — pause at box'),
-        E('BB Hip Thrust',deload?'3×6 @ 60%':'4×6 @ '+int,'Glute force production'),
-        E('Face Pulls','3 × 12','Posterior delt + external rotator + serratus'),
-      ],
-      conditioning:[E('Reverse Hypers','3 × 12','Spinal decompression — non-optional maintenance')]
-    },
-    4: { // FRI — Full Athletic
-      title:'FULL ATHLETIC',
-      focus:'Sprint + Jumps + Rotational Power + Carries',
+    3: { // THU — Snatch Remediation + Cossack Squat
+      title:'SNATCH REMEDIATION + LATERAL STRENGTH',
+      focus:'Hang Snatch + Overhead Squat + Snatch Pull + Cossack Squat',
       duration:'80-90 min',
-      warmup:[E('A-Skip / B-Skip Drills','3 × 20m each','Sprint mechanics prep'),E('Ankle Pogo Jumps','2 × 15','Ankle stiffness activation'),E('Lateral Shuffle','2 × 20m','Multi-directional warm-up')],
-      core:coreBlock.slice(2,5),
+      warmup: (dayIdx%2===0?rightSideA:rightSideB),
+      core: core.slice(0,3),
       main:[
-        E('Linear Sprints 10-40m',deload?'4 × 20m @ 80%':'6 × 10m + 4 × 20m + 2 × 40m','First-step explosion — golf stance activation'),
-        E('Trap Bar Jumps',deload?'3×3 @ light':'4×5 @ moderate','Loaded vertical explosiveness'),
+        E('Overhead Squat',deload?'3×5 bar only':w<=4?'4×5 bar only':w<=6?'4×5 @ 65 lbs':w<=9?'4×5 @ 95 lbs':'4×4 @ 115 lbs','PRIORITY EXERCISE. Full depth. If ankles or thoracic fail, stay at current weight. This exposes everything.'),
+        E('Hang Snatch',w<=4?'5×3 empty bar technique':w<=6?'5×3 @ '+snatchLoad:w<=9?'5×3 @ '+snatchLoad:'5×2 @ '+snatchLoad,'Your 105 lb snatch at your strength = technique gap. Patient remediation from the ground up.'),
+        E('Snatch Pull',deload?'3×5 light':w<=6?'4×4 @ 60-65%':'4×4 @ 70-75%','Full extension — speed through the middle. This builds the pull your snatch needs.'),
+        E('Barbell Cossack Squat',deload?'3×6 each BW':w<=4?'3×8 each BW':w<=8?'3×8 each @ bar only':'3×6 each @ 65 lbs','NEW. Lateral hip mobility + adductor strength under load. Start bodyweight and EARN the barbell.'),
+        E('Box Back Squat',sqVol,'Absolute force engine — but only through perfect ROM. Pause at box.'),
+        E('Face Pulls','3 × 12','Right shoulder priority — posterior delt + rotator cuff'),
+      ],
+      conditioning:[E('Reverse Hypers','3 × 12','Spinal decompression')]
+    },
+    4: { // FRI — Full Athletic + Swing Mechanics
+      title:'FULL ATHLETIC + SWING MECHANICS',
+      focus:'Sprint + Jumps + Golf Swing Loading + Rotational Power',
+      duration:'85-95 min',
+      warmup: (dayIdx%2===0?rightSideA:rightSideB),
+      core: core.slice(2,5),
+      main:[
+        ...(w>=4 ? swingMechanics : swingMechanics.slice(0,3)),
+        E('Linear Sprints 10-40m',deload?'4 × 20m @ 75%':'6 × 10m + 4 × 20m + 2 × 40m','First-step explosion — sprint mechanics before speed'),
+        E('Trap Bar Jumps',deload?'3×3 light':'4×5 @ moderate','Loaded vertical explosiveness'),
         E('Lateral MB Throws','5 × 5 each side','Rotational projectile velocity — measure distance monthly'),
         E('Rotational MB Slam','4 × 6 each side','Maximum intent every rep'),
-        E('Kneeling Landmine Rot. Press','3 × 8 each side','Spiral line force connection'),
+        E('Kneeling Landmine Rot. Press','3 × 8 each','Spiral line force connection'),
       ],
-      conditioning:[E('Farmer\'s Carries','4 × 40m heavy','Total body tension — grip')]
+      conditioning:[E('Farmer\'s Carries','4 × 40m heavy','Total body tension')]
     },
     5: { // SAT — Aerobic + Unilateral
       title:'AEROBIC + UNILATERAL',
-      focus:'400m Repeats or 5K + BSS + Nordic + Copenhagen',
-      duration:'75-90 min',
-      warmup:[E('Light Jog / Row','5 min','Blood flow'),E('Walking Lunges','2 × 10 each','Dynamic stretch')],
-      core:[coreBlock[5],coreBlock[6]],
+      focus:'Conditioning + BSS + Nordic + Copenhagen + Gait',
+      duration:'80-90 min',
+      warmup: (dayIdx%2===0?rightSideA:rightSideB),
+      core:[core[5],core[6]],
       main:[
-        E('Conditioning',w<=3?'2×(4×400m) w/ 90s rest':w===4?'Row 30min @ Z1-Z2':w<=6?'3×(3×400m) w/ 75s rest':w===7?'2000m Row Test (benchmark)':'Easy 20min row','Energy system development — aerobic base is the foundation'),
-        E('Bulgarian Split Squat','4 × 8 each side @ '+int,'Unilateral strength king'),
+        E('Conditioning',w<=4?'Row 25min @ Z2':w<=8?'2×(4×400m) w/ 90s rest':w===12?'Easy 20min row':w<=10?'3×(3×400m) w/ 75s rest':'2000m Row Test','Energy system — aerobic base is the foundation Tiger built everything on'),
+        E('Bulgarian Split Squat','4 × 8 each @ '+int,'Unilateral strength king — full depth, rear knee to floor'),
         E('SLRDL','3 × 8 each side','Single-leg hinge mastery'),
         E('Nordic Curls','4 × 4-6','Eccentric hamstring protection — slow 4 sec negative'),
         E('Copenhagen Dips','3 × 8 each','Adductor bulletproofing'),
+        E('Deficit Reverse Lunge','3 × 8 each','Hip flexor + glute demand'),
+        E('Handstand Push-up Progression',w<=6?'3×30 sec wall hold + 3×8 pike push-ups':'3×6 wall-assisted HSPU','Building toward freestanding — patience'),
       ],
-      conditioning:[E('Deficit Reverse Lunge','3 × 8 each','Greater hip flexor + glute demand')]
+      conditioning:[]
     },
-    6: { // SUN — Rest + Flexibility
-      title:'RECOVERY / MOBILITY',
-      focus:'Static Split Work + T-Spine + Hip 90/90',
-      duration:'30-40 min',
-      warmup:[E('Light Walk or Cycling','5-10 min','Blood flow only — no intensity')],
+    6: { // SUN — Recovery + Mobility + Gait
+      title:'RECOVERY / MOBILITY / GAIT',
+      focus:'Splits + Hip 90/90 + Predator Walk + Right-Side Work',
+      duration:'40-50 min',
+      warmup: (dayIdx%2===0?rightSideA:rightSideB),
       core:[],
-      main:mobilityBlock,
+      main:[
+        ...mob,
+        E('Barefoot Walking Drill','5 min','Heel-to-toe on a line. Slow. Deliberate. Feel every foot strike.'),
+        E('Single-Leg Balance (folded towel)','60 sec each foot','Foot intrinsic strength — build the foundation from the ground up'),
+      ],
       conditioning:[E('Breathing / Parasympathetic Work','5 min','Box breathing 4-4-4-4 — activate recovery')]
     }
   };
@@ -763,454 +842,455 @@ function getPhase1Day(w, dayIdx){
 }
 
 // ═══════════════════════════════════════════════════════════
-// PHASE 2: WEEKS 9-16
+// PHASE 2: STRENGTH THROUGH RANGE (Weeks 13-22)
 // ═══════════════════════════════════════════════════════════
 function getPhase2Day(w, dayIdx){
-  const deload=(w===12||w===16);
-  const sqProto=w===9?'10-8-6-5 @ 65-75-80-83%':w===10?'10-8-6-5 @ 68-77-82-85%':w===11?'8-6-5-3 @ 72-80-85-88%':w===12?'DELOAD: 3×5 @ 65%':w===13?'8-6-4-2 @ 75-82-87-91%':w===14?'6-4-3-2 @ 78-84-89-93%':w===15?'5-3-2-1 @ 80-86-91-95%':'DELOAD: 3×4 @ 62%';
-  const cleanSnatch=w===9?'Clean 5×3@78% | Snatch 5×3@77%':w===10?'Clean 5×2@82% | Snatch 5×2@81%':w===11?'Clean 4×2@85% | Snatch 4×2@83%':w===12?'Technique only @ 70%':w===13?'Clean 4×(1+2)@87% | Snatch 4×2@85%':w===14?'Clean 3×(1+2)@90% | Snatch 3×1@87%':w===15?'Clean heavy single | Snatch heavy single':'Light/fast @ 65%';
-  const pullWeight=w<=10?'+50 lbs':w<=12?'+55 lbs':'+60 lbs';
-
-  const coreP2=[
-    E('Ab Roller','4 × 8-10','Progress toward full extension'),
-    E('Side Plank Dynamic','3 × 12 each','Maintain golf anti-sway'),
-    E('Landmine Rotation','3 × 10 each','Heavier load than Phase 1'),
-    E('Hanging Leg Raises','3 × 12','Full range — toes to bar goal'),
-  ];
+  const deload=(w===16||w===22);
+  const sqProto=w===13?'10-8-6-5 @ 65-75-80-83%':w===14?'10-8-6-5 @ 68-77-82-85%':w===15?'8-6-5-3 @ 72-80-85-88%':w===16?'DELOAD: 3×5 @ 65%':w===17?'8-6-4-2 @ 75-82-87-91%':w===18?'6-4-3-2 @ 78-84-89-93%':w===19?'6-4-2-1 @ 80-86-91-95%':w===20?'5-3-2-1 @ 82-88-93-96%':w===21?'5-3-1-1 @ 83-89-94-97%':'DELOAD: 3×4 @ 62%';
+  const cleanSnatch=w<=14?'Clean 5×3@75% | Snatch 5×3@70%':w<=16?'Clean 4×2@82% | Snatch 4×2@78%':w<=18?'Clean 4×(1+2)@87% | Snatch 4×2@83%':w<=20?'Clean 3×(1+2)@90% | Snatch 3×1@87%':w===21?'Clean heavy single | Snatch heavy single':'Light/fast @ 65%';
+  const pullWt=w<=15?'+35 lbs':w<=18?'+45 lbs':w<=21?'+55 lbs':'+35 lbs';
+  const core = coreBlock(2);
+  const rightSide = rightSideA; // A rotation for Phase 2
 
   const days = {
-    0: { title:'HEAVY LOWER', focus:'Box Back Squat (Wave) + RDL', duration:'80-90 min',
-      warmup:[E('Foam Roll','5 min','Lower body focus'),E('Goblet Squat','2×8','Hip opener'),E('Band Walks','2×12 each','Glute activation')],
-      core:coreP2.slice(0,2),
+    0: { title:'HEAVY LOWER', focus:'Box Back Squat (Wave) + Hip Thrust + Cossack', duration:'85-95 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:core.slice(0,2),
       main:[
+        E('DB Goblet Squat Duck Walk','2 × 10 steps each','Mobility maintenance — keep earning this'),
         E('Box Back Squat',sqProto,'Eastern Bloc wave loading — rest 3-4 min between top sets'),
-        E('BB Hip Thrust',deload?'3×6@65%':'4×6 @ 80-85%','Glute force engine'),
-        E('Hamstring Ground Push & Pull','3 × 15','Superior hamstring loading pattern'),
-        E('Face Pulls','3 × 15','Posterior delt + external rotator + serratus — add weight when possible'),
+        E('BB Hip Thrust',deload?'3×6@60%':'4×6 @ 80-85%','Glute force engine'),
+        E('Barbell Cossack Squat',deload?'3×6 each light':'4×6 each @ '+(w<=16?'75-95 lbs':'95-135 lbs'),'Lateral hip strength — loaded mobility'),
+        E('Hamstring Ground Push & Pull','3 × 15','Superior hamstring loading'),
+        E('Face Pulls','3 × 15','Posterior delt + external rotator'),
       ],
-      conditioning:[E('Reverse Hypers','3 × 12','Spinal decompression — after every heavy squat')]
+      conditioning:[E('Reverse Hypers','3 × 12','Spinal decompression')]
     },
-    1: { title:'HEAVY UPPER PULL', focus:'Pendlay Row + Weighted Pull-ups + Chin-ups', duration:'75-85 min',
-      warmup:[E('Band Pull-Aparts','3×15','Rear delt activation'),E('Scap Pull-ups','2×8','Lat engagement'),E('Light Row','3 min','Blood flow')],
-      core:coreP2.slice(2,4),
+    1: { title:'HEAVY UPPER PULL', focus:'Pendlay Row + Pull-ups + Chin-ups + Shoulder Health', duration:'80-90 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:core.slice(2,5),
       main:[
-        E('Pendlay Row','5×5 progressing weekly','Start 65% est 1RM — add 5 lbs/week minimum'),
-        E('Weighted Pull-ups','4×5 @ '+pullWeight,'Vertical density — lat length-tension'),
-        E('Chin-ups','3 × 8 BW','Supinated lat recruitment + bicep tendon health'),
-        E('DB Pullovers','3 × 12','Better ROM — shoulder-safe arc — golf asymmetry'),
-        E('Band External Rotations','3 × 15 each','Rotator cuff protection'),
-        E('Y/T/W Raises','2 × 8 each position','Lower trap + scapular stability'),
+        E('Pendlay Row','5×5 progressing weekly','Add 5 lbs/week when form is perfect — no cheating'),
+        E('Weighted Pull-ups','4×5 @ '+pullWt,'Vertical density — earn every pound'),
+        E('Chin-ups','3 × 8 BW','Supinated lat recruitment + bicep tendon'),
+        E('DB Pullovers','3 × 12','Shoulder-safe arc — golf asymmetry'),
+        E('Band External Rotations','3 × 15 each','Rotator cuff — right side priority'),
+        E('Y/T/W Raises','2 × 8 each','Lower trap + scapular stability'),
         E('Farmer\'s Carries','4 × 40m heavy','Total body tension + grip'),
       ],
       conditioning:[]
     },
-    2: { title:'OLYMPIC LIFT DAY', focus:'Power Clean + Snatch + Front Squat + OHS', duration:'80-90 min',
-      warmup:[E('Snatch Grip DL','3×3 light','Pattern groove'),E('Muscle Clean','2×5','Pathway warm-up')],
-      core:coreP2,
+    2: { title:'OLYMPIC LIFT + OHS', focus:'Power Clean + Snatch + Overhead Squat + Front Squat', duration:'85-95 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:core,
       main:[
+        E('Overhead Squat',deload?'3×5 light':'4×4 @ '+(w<=16?'95-115 lbs':w<=19?'115-135 lbs':'135-155 lbs'),'Full depth overhead — this is where your mobility gets tested under load'),
         E('Power Clean + Snatch',cleanSnatch,'Technique + loading progression'),
-        E('Overhead Squat',deload?'3×5 light':'4×4 @ 65-75%','Full depth overhead — mobility + stability'),
-        E('Snatch Pull',deload?'3×4 light':'4×3 @ 78-83%','Full extension — speed through the middle'),
-        E('Front Squat',deload?'3×3@65%':'4×4 @ 78-85%','Anterior pillar king — upright posture'),
+        E('Snatch Pull',deload?'3×4 light':'4×3 @ '+(w<=16?'75-80%':'80-85%'),'Full extension — speed through middle'),
+        E('Front Squat',deload?'3×3@60%':'4×4 @ 78-85%','Anterior pillar — upright posture'),
         E('Kneeling Landmine Rot. Press','3 × 10 each','Spiral line force'),
       ],
-      conditioning:[E('Reverse Hypers','3 × 12','Decompress after Olympic loading')]
+      conditioning:[E('Reverse Hypers','3 × 12','Decompress')]
     },
-    3: { title:'AEROBIC + UNILATERAL', focus:'Row 40min + BSS + SLRDL + Nordic', duration:'70-80 min',
-      warmup:[E('Light Row','5 min @ Z1','Build gradually')],
-      core:[coreP2[0]],
+    3: { title:'AEROBIC + UNILATERAL + GAIT', focus:'Row + BSS + SLRDL + Nordic + Predator Protocol', duration:'75-85 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:[core[0]],
       main:[
-        E('Row','40 min @ Zone 2','Cardiac output — Z2 heart rate target'),
-        E('Bulgarian Split Squat','4 × 8 each @ 75-80%','Unilateral strength king'),
-        E('SLRDL','3 × 8 each side','Single-leg hinge mastery'),
+        E('Row','40 min @ Zone 2','Cardiac output — Z2 target'),
+        E('Bulgarian Split Squat','4 × 8 each @ 75-80%','Unilateral king — full depth'),
+        E('SLRDL','3 × 8 each','Single-leg hinge mastery'),
         E('Nordic Curls','4 × 5-6','Eccentric hamstring — 4 sec negative'),
-        E('KOT Lunge','3 × 8 each','Knee health — patellar tendon'),
+        E('KOT Lunge','3 × 8 each','Knee health'),
+        ...gaitProtocol.slice(0,3),
       ],
       conditioning:[]
     },
-    4: { title:'UPPER PRESS + CORE', focus:'Bench + Landmine Press + Core Circuit', duration:'75-85 min',
-      warmup:[E('Band Dislocates','2×12','Shoulder prep'),E('Push-up Complex','2×10','Pec/shoulder activation'),E('Light DB Press','2×8','Groove pattern')],
-      core:coreP2,
+    4: { title:'UPPER PRESS + SWING MECHANICS', focus:'Bench + Landmine + DB Shoulder + HSPU + Golf Loading', duration:'85-95 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:core,
       main:[
-        E('Flat Bench Press',deload?'3×5@65%':'5×5 @ 78-85%','Horizontal pressing power'),
-        E('Landmine Press','4 × 8 each arm','Spiral-line activation — shoulder-safe arc'),
-        E('DB Shoulder Press',deload?'3×8 light':'4×8 @ moderate-heavy','Direct shoulder strength — overhead pressing power'),
-        E('Handstand Push-up Progression',deload?'3×6 pike push-ups':'4 × 6-8','Direct shoulder demand + skill development'),
+        ...swingMechanics,
+        E('Flat Bench Press',deload?'3×5@60%':'5×5 @ 78-85%','Horizontal pressing power'),
+        E('Landmine Press','4 × 8 each','Spiral-line — shoulder-safe arc'),
+        E('DB Shoulder Press',deload?'3×8 light':'4×8 @ '+(w<=16?'60-65 lbs':'65-75 lbs'),'Direct overhead pressing'),
+        E('Handstand Push-up Progression',deload?'3×8 pike push-ups':'4 × 6-8 wall HSPU','Shoulder demand + skill'),
       ],
-      conditioning:[E('Sled Push/Pull','6 × 20m','Pure force — zero joint compression recovery')]
+      conditioning:[E('Sled Push/Pull','6 × 20m','Pure force — zero joint compression')]
     },
-    5: { title:'FULL POWER DAY', focus:'Hip Thrust + Trap Bar Jumps + Sprint + MB Throws', duration:'80-90 min',
-      warmup:[E('Dynamic Warm-up','8 min','A-skip, B-skip, lateral shuffle, carioca'),E('Pogo Jumps','2×15','Ankle stiffness')],
-      core:coreP2.slice(0,2),
+    5: { title:'FULL POWER + ATHLETIC', focus:'Hip Thrust + Trap Bar Jumps + Sprint + MB + Conditioning', duration:'85-95 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:core.slice(0,2),
       main:[
-        E('BB Hip Thrust',deload?'3×5@65%':'4×5 @ 83-88%','Glute force — sprinting/rotation engine'),
+        E('BB Hip Thrust',deload?'3×5@60%':'4×5 @ 83-88%','Glute force — sprinting/rotation engine'),
         E('Trap Bar Jumps','4 × 5 @ moderate-heavy','Loaded vertical explosiveness'),
-        E('Linear Sprints','6×10m + 4×20m + 2×40m','Acceleration + max velocity'),
-        E('Lateral MB Throws','5 × 5 each side','Rotational velocity = clubhead speed'),
-        E('Rotational MB Slam','4 × 6 each side','Maximum intent every rep'),
+        E('Linear Sprints','6×10m + 4×20m + 2×40m','Acceleration + velocity'),
+        E('Lateral MB Throws','5 × 5 each','Rotational velocity = clubhead speed'),
+        E('Rotational MB Slam','4 × 6 each','Maximum intent'),
+        E('Conditioning',w<=16?'3×(3×400m) w/ 75s rest':w<=19?'6×400m w/ 90s rest':'2000m Row Test','Energy system progression'),
+        E('Copenhagen Dips','3 × 10 each','Adductor bulletproofing'),
       ],
-      conditioning:[E('Copenhagen Dips','3 × 10 each','Adductor bulletproofing')]
+      conditioning:[]
     },
-    6: { title:'RECOVERY / MOBILITY', focus:'Split Progress + Hip 90/90 + T-Spine', duration:'30-40 min',
-      warmup:[E('Light Walk','10 min','Active recovery — blood flow only')],
+    6: { title:'RECOVERY / MOBILITY / GAIT', focus:'Splits + Hip 90/90 + Predator Walk', duration:'40-50 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
       core:[],
       main:[
-        E('Hip 90/90 Rotations','3 min each side','Internal rotation — daily non-negotiable'),
-        E('Kneeling T-Spine Opener','12 reps each','Thoracic rotation for golf'),
-        E('Forward Split Holds','3 × 60 sec each side','Within 2 inches of floor by W16'),
-        E('Lateral Split Holds','3 × 45 sec','Hip base development'),
-        E('PVC Over and Back','3 × 10','Shoulder girdle maintenance'),
-        E('Ankle Dorsiflexion Drill','3 × 15 each','Sprint mechanics + squat depth'),
-        E('Reverse Crab Reaches','3 × 10 each','Anterior chain opening'),
+        ...mobilityBlock(2),
+        E('Barefoot Walking Drill','5 min','Predator placement — every step intentional'),
+        E('Single-Leg Balance','60 sec each','Foot intrinsic strength'),
       ],
-      conditioning:[E('Breathing Work','5 min','Box breathing — parasympathetic activation')]
+      conditioning:[E('Breathing Work','5 min','Box breathing 4-4-4-4')]
     }
   };
   return days[dayIdx];
 }
 
 // ═══════════════════════════════════════════════════════════
-// PHASE 3: WEEKS 17-24
+// PHASE 3: POWER CONVERSION (Weeks 23-32)
 // ═══════════════════════════════════════════════════════════
 function getPhase3Day(w, dayIdx){
-  const deload=(w===23||w===24);
-  const tripPhase=w<=18?'ECCENTRIC (5s down, 1s up)':w<=20?'ISOMETRIC (3s pause)':w<=22?'CONCENTRIC (explosive)':'DELOAD + TEST';
-  const tripProto=w<=18?'4×4 @ 78%':w<=20?'4×4 @ 80%':w<=22?'5×3 @ 85%':'3×3 @ 70%';
-
-  const coreP3=[
-    E('Ab Roller (extended)','4 × 10','Progress toward full extension from toes'),
-    E('Side Plank Dynamic','3 × 15 each','Increased reps — golf anti-sway'),
-    E('Landmine Rotation (heavier)','4 × 8 each','Progressive overload on transverse plane'),
-    E('Hanging Leg Raises','4 × 10','Full ROM — anti-extension mastery'),
-  ];
+  const deload=(w===27||w===32);
+  const tripPhase=w<=24?'ECCENTRIC (5s down)':w<=26?'ISOMETRIC (3s pause)':w<=28?'CONCENTRIC (explosive)':w<=30?'ECCENTRIC (5s)':w<=31?'CONCENTRIC (explosive)':'DELOAD';
+  const tripProto=w<=24?'4×4 @ 78%':w<=26?'4×4 @ 80%':w<=28?'5×3 @ 85%':w<=30?'4×3 @ 82%':w<=31?'5×2 @ 87%':'3×3 @ 65%';
+  const core = coreBlock(3);
+  const rightSide = rightSideA; // compressed for Phase 3
 
   const days = {
-    0: { title:'BACK SQUAT DAILY MAX', focus:'Daily Max Single + Back-offs', duration:'80-90 min',
-      warmup:[E('Foam Roll + Band Walks','5 min','Glute activation focus'),E('Goblet Squat','2×5','Pattern warm-up'),E('Empty Bar Squats','2×5','Bar path groove')],
-      core:coreP3.slice(0,2),
+    0: { title:'SQUAT DAILY MAX', focus:'Box Back Squat Max + Back-offs + Cossack', duration:'85-95 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:core.slice(0,2),
       main:[
-        E('Box Back Squat — Work to Daily Max','~5-7 sets to technical max','Form breaks = that\'s the max. Not a grind max.'),
-        E('Box Back Squat Back-off','3×3 @ 90% of daily max','Quality reps — no grinding'),
+        E('DB Goblet Squat Duck Walk','2 × 8 steps each','Mobility maintenance'),
+        E('Box Back Squat — Work to Daily Max','~5-7 sets to technical max','Form breaks = max. Not a grind. Through FULL range only.'),
+        E('Box Back Squat Back-off','3×3 @ 90% of daily max','Quality reps'),
         E('BB Hip Thrust ('+tripPhase+')',tripProto,'Triphasic loading — glute force'),
-        E('Face Pulls','3 × 12-15','Posterior delt + external rotator + serratus'),
+        E('Barbell Cossack Squat','4×5 each @ '+(deload?'95 lbs':'135-155 lbs'),'Lateral strength — loaded mobility expression'),
+        E('Face Pulls','3 × 15','Posterior delt + external rotator'),
       ],
-      conditioning:[E('Reverse Hypers','3 × 12','Spinal decompression — non-optional')]
+      conditioning:[E('Reverse Hypers','3 × 12','Spinal decompression')]
     },
-    1: { title:'POWER CLEAN DAILY MAX', focus:'Clean Max + Back-offs + Upper Pull', duration:'80-90 min',
-      warmup:[E('Muscle Clean','3×3','Pathway activation'),E('Hang Clean','2×3 @ 60%','Speed work'),E('Scap Pull-ups','2×8','Lat prep')],
-      core:coreP3.slice(2,4),
+    1: { title:'CLEAN DAILY MAX', focus:'Power Clean Max + Upper Pull', duration:'85-95 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:core.slice(2,4),
       main:[
         E('Power Clean — Work to Daily Max','~6-8 sets to technical max','Triple extension IS the downswing'),
-        E('Power Clean Back-off','3×2 @ 88% of daily max','Crisp technique — no power leak'),
-        E('Pendlay Row','5×3 @ 82-87%','Horizontal pulling power — heavy'),
-        E('Weighted Pull-ups','4×3 @ +60-70 lbs','Heavy vertical pull density'),
+        E('Power Clean Back-off','3×2 @ 88% of daily max','Crisp technique'),
+        E('Pendlay Row','5×3 @ 82-87%','Heavy horizontal pull'),
+        E('Weighted Pull-ups','4×3 @ +55-70 lbs','Heavy vertical density'),
+        E('Band External Rotations','3 × 15 each','Rotator cuff maintenance'),
       ],
-      conditioning:[E('Sled Push','8×20m heavy','Leg drive = ground force into swing')]
+      conditioning:[E('Sled Push','8×20m heavy','Leg drive = ground force')]
     },
-    2: { title:'FRONT SQUAT DAILY MAX', focus:'FS Max + Back-offs + Rotational Power', duration:'80-90 min',
-      warmup:[E('T-Spine Opener','2×8 each','Thoracic prep for front rack'),E('Front Squat','2×3 @ 60%','Pattern groove'),E('Hip 90/90','2 min each','IR prep')],
-      core:coreP3.slice(0,2),
+    2: { title:'FRONT SQUAT DAILY MAX + ROTATION', focus:'FS Max + Swing Mechanics + Rotational Power', duration:'85-95 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:core.slice(0,2),
       main:[
-        E('Front Squat — Work to Daily Max','~5-7 sets to technical max','Anterior pillar test — upright or fail'),
-        E('Front Squat Back-off','3×3 @ 90% of daily max','Quality volume'),
-        E('Lateral MB Throws','6×5 each side','Focus on LAG STORAGE in backswing position'),
-        E('Landmine Rotational Press (standing)','4×6 each','Standing with hip drive'),
+        E('Front Squat — Work to Daily Max','~5-7 sets to technical max','Upright or fail — full depth'),
+        E('Front Squat Back-off','3×3 @ 90% of daily max','Quality'),
+        ...swingMechanics,
         E('Rotational MB Slam','4×6 each','Maximum intent'),
       ],
       conditioning:[]
     },
-    3: { title:'SNATCH DAILY MAX', focus:'Snatch Max + OHS + Snatch Pull + Accessories', duration:'85-95 min',
-      warmup:[E('Snatch Grip DL','3×3','Wide grip warm-up'),E('Hang Snatch','3×2 @ 60%','Speed + position')],
-      core:coreP3.slice(2,4),
+    3: { title:'SNATCH DAILY MAX + OHS', focus:'Snatch Max + Overhead Squat + Snatch Pull', duration:'85-95 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:core.slice(2,4),
       main:[
-        E('Snatch — Work to Daily Max','~6-8 sets to technical max','Vertical RFD — overhead stability'),
-        E('Snatch Back-off','3×2 @ 87% of daily max','Crisp reception — no forward lean'),
-        E('Overhead Squat','4×3 @ 75-80%','Full depth — express overhead stability built from snatch'),
-        E('Snatch Pull','4×3 @ 83-87%','Full extension — speed + power through the middle'),
-        E('Deficit Reverse Lunge','4×6 each @ heavy','Greater hip flexor + glute demand'),
+        E('Snatch — Work to Daily Max','~6-8 sets to technical max','Vertical RFD — full depth reception'),
+        E('Snatch Back-off','3×2 @ 87% of daily max','Crisp reception'),
+        E('Overhead Squat','4×3 @ '+(deload?'95 lbs':'135-165 lbs'),'Full depth — express overhead stability'),
+        E('Snatch Pull','4×3 @ 83-87%','Full extension — speed + power'),
+        E('Deficit Reverse Lunge','4×6 each heavy','Hip flexor + glute'),
         E('Nordic Curls','4 × 5','Eccentric hamstring protection'),
       ],
-      conditioning:[E('Kneeling Landmine Rot. Press','3×8 each','Spiral line connection')]
+      conditioning:[E('Kneeling Landmine Rot. Press','3×8 each','Spiral line')]
     },
-    4: { title:'SQUAT + CLEAN SAME DAY', focus:'Back Squat + Power Clean + Expression', duration:'100 min',
-      warmup:[E('Full Dynamic Warm-up','10 min','A/B-skip, band walks, pogo jumps, hip openers')],
-      core:coreP3,
+    4: { title:'SQUAT + CLEAN + PRESS', focus:'Heavy Compound Day + Shoulder Work', duration:'100 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:core,
       main:[
-        E('Box Back Squat — Work to Daily Max','~5-7 sets','Second heavy squat day of week'),
+        E('Box Back Squat — Work to Daily Max','~5-7 sets','Second squat day'),
         E('Box Back Squat Back-off','3×2 @ 90%','Crisp'),
-        E('Power Clean — Work to Daily Max','~5-7 sets','Back-to-back CNS loading'),
+        E('Power Clean — Work to Daily Max','~5-7 sets','Back-to-back CNS'),
         E('Power Clean Back-off','3×2 @ 88%','Quality'),
-        E('Bench Press','4×4 @ 82-87%','Maintain pressing strength'),
-        E('DB Shoulder Press','4×6 @ moderate-heavy','Direct overhead pressing — shoulder strength'),
+        E('Bench Press','4×4 @ 82-87%','Pressing strength'),
+        E('DB Shoulder Press','4×6 @ 70-80 lbs','Overhead pressing'),
       ],
-      conditioning:[E('Reverse Hypers','3 × 15','Decompress — long session')]
+      conditioning:[E('Reverse Hypers','3 × 15','Decompress')]
     },
-    5: { title:'POWER EXPRESSION DAY', focus:'Jumps + Sprints + MB Throws — No Daily Max', duration:'75-85 min',
-      warmup:[E('Dynamic Warm-up','8 min','Full movement prep'),E('Pogo Jumps','2×15','Ankle stiffness')],
-      core:coreP3.slice(0,2),
+    5: { title:'POWER EXPRESSION', focus:'Jumps + Sprints + MB — No Daily Max', duration:'80-90 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:core.slice(0,2),
       main:[
         E('Linear Sprints','8×10m + 4×20m + 2×40m','Express everything built'),
         E('Trap Bar Jumps','5×4 @ moderate-heavy','Loaded vertical power'),
-        E('Depth Jumps','4×5','Amortization & reactive stiffness'),
+        E('Depth Jumps','4×5','Amortization + reactive stiffness'),
         E('Lateral MB Throws','5×5 each','Rotational velocity expression'),
-        E('Broad Jumps','4×4','Horizontal power output'),
+        E('Broad Jumps','4×4','Horizontal power'),
+        E('Conditioning',w<=26?'6×400m w/ 75s rest':deload?'Easy 20min row':'8×400m w/ 60s rest','Energy system peak'),
       ],
-      conditioning:[E('Sled Pull (backward)','4×20m','Quad activation + knee health')]
+      conditioning:[E('Sled Pull (backward)','4×20m','Quad activation + predator gait')]
     },
-    6: { title:'RECOVERY / MOBILITY', focus:'Passive Stretching Only — Splits + Hip 90/90', duration:'30-40 min',
-      warmup:[E('Light Walk','10 min','Blood flow — zero intensity')],
+    6: { title:'RECOVERY / MOBILITY', focus:'Splits + Hip 90/90 + Recovery', duration:'35-45 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
       core:[],
       main:[
-        E('Hip 90/90 Rotations','3 min each side','Internal rotation — daily'),
-        E('Forward Split Holds','4 × 60 sec each side','Full or within 1 inch by W24'),
-        E('Lateral Split Holds','3 × 60 sec','Hip base nearing full'),
-        E('Kneeling T-Spine Opener','12 reps each','Thoracic rotation maintenance'),
-        E('PVC Over and Back','3 × 10','Shoulder girdle health'),
-        E('Ankle Dorsiflexion','3 × 15 each','Sprint + squat prep'),
+        ...mobilityBlock(3),
+        E('Barefoot Walking Drill','5 min','Predator placement'),
       ],
-      conditioning:[E('Cold/Heat Therapy','10-15 min','Contrast therapy recommended after Saturdays')]
+      conditioning:[E('Cold/Heat Therapy','10-15 min','Contrast therapy — recovery is training')]
     }
   };
   return days[dayIdx];
 }
 
 // ═══════════════════════════════════════════════════════════
-// PHASE 4: WEEKS 25-32
+// PHASE 4: ATHLETIC INTEGRATION (Weeks 33-42)
 // ═══════════════════════════════════════════════════════════
 function getPhase4Day(w, dayIdx){
-  const deload=(w===28||w===32);
+  const deload=(w===37||w===42);
+  const core = coreBlock(4);
+  const rightSide = rightSideA; // compressed for Phase 4
+
   const days = {
-    0: { title:'COMPLEX PAIR — LOWER', focus:'Squat → Depth Jump + Hip Thrust → Broad Jump', duration:'85-95 min',
-      warmup:[E('Dynamic Warm-up','8 min','Full prep — emphasis on hip activation'),E('Pogo Jumps','2×15','Ankle stiffness'),E('Band Walks','2×12 each','Glute medius')],
-      core:[E('Ab Roller (full ext)','4×10','From toes if capable'),E('Side Plank Dynamic','3×15 each','Lateral stability')],
+    0: { title:'COMPLEX PAIR — LOWER', focus:'Squat → Depth Jump + Hip Thrust → Broad Jump', duration:'90-100 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:core.slice(0,2),
       main:[
-        E('Box Back Squat','4×4 @ 85%','4 min rest after squats'),
-        E('→ Depth Jump','4×5','10 sec transition from squat — post-activation potentiation'),
+        E('DB Goblet Squat Duck Walk','2 × 8 steps each','Mobility maintenance'),
+        E('Box Back Squat','4×4 @ 85%','4 min rest then jump'),
+        E('→ Depth Jump','4×5','10 sec transition — post-activation potentiation'),
         E('BB Hip Thrust','4×4 @ 87%','3 min rest then jump'),
-        E('→ Broad Jump','4×4','Express horizontal power — post-activation'),
+        E('→ Broad Jump','4×4','Express horizontal power'),
+        E('Barbell Cossack Squat','4×4 each @ '+(deload?'115 lbs':'155-185 lbs'),'Heavy lateral strength'),
         E('Nordic Curls','4 × 5-6','Eccentric hamstring protection'),
       ],
       conditioning:[E('Reverse Hypers','3 × 15','Spinal decompression')]
     },
-    1: { title:'COMPLEX PAIR — UPPER + ROTATION', focus:'Row → MB Throw + Clean → Trap Bar Jump', duration:'85-95 min',
-      warmup:[E('Band Pull-Aparts','3×15','Rear delt'),E('Scap Pull-ups','2×8','Lat activation'),E('Muscle Clean','2×3','Pathway')],
-      core:[E('Landmine Rotation (heavy)','4×8 each','Transverse plane torque'),E('Hanging Leg Raises','4×12','Anti-extension mastery')],
+    1: { title:'COMPLEX PAIR — UPPER + ROTATION', focus:'Row → MB Throw + Clean → Trap Bar Jump', duration:'90-100 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:[core[2],core[3]],
       main:[
         E('Pendlay Row','4×4 @ 85%','Rest 4 min then throw'),
-        E('→ Med Ball Rot. Throw','4×5 each','10-12 sec transition — rotational velocity'),
+        E('→ Med Ball Rot. Throw','4×5 each','10-12 sec transition'),
         E('Power Clean','4×2 @ 88%','Rest then jump'),
-        E('→ Trap Bar Jump','4×4','8-10 sec transition — loaded vertical'),
-        E('Weighted Pull-ups','4×3 @ +65-75 lbs','Heavy vertical density'),
-      ],
-      conditioning:[E('DB Pullovers','3×12','Shoulder-safe arc — lat stretch — golf asymmetry'),E('Band External Rotations','3×15 each','Rotator cuff protection'),E('Y/T/W Raises','2×8 each','Lower trap + scapular stability')]
-    },
-    2: { title:'SPRINT + CONDITIONING', focus:'Sprint Blocks + Rowing Intervals', duration:'75-85 min',
-      warmup:[E('A-Skip / B-Skip','3×20m each','Sprint mechanics prep'),E('Ankle Pogo Jumps','2×15','Stiffness')],
-      core:[E('Ab Roller','3×10','Anti-extension'),E('Bird Dogs','3×10 each','Spinal stability')],
-      main:[
-        E('Linear Sprints 10/20/40m','8×10m + 4×20m + 2×40m','Acceleration blocks — first step quickness'),
-        E('Row Intervals',w<=27?'8×3min @ 1:50/500m':w<=30?'6×4min @ 1:47/500m':'4×5min @ 1:45/500m','Progress pace each 2-week block'),
-        E('Sled Pull (backward)','6×20m','Quad activation + knee health in terminal extension'),
+        E('→ Trap Bar Jump','4×4','8-10 sec transition'),
+        E('Weighted Pull-ups','4×3 @ +65-80 lbs','Heavy vertical density'),
+        E('DB Pullovers','3×12','Shoulder-safe arc'),
+        E('Band External Rotations','3×15 each','Rotator cuff'),
+        E('Y/T/W Raises','2×8 each','Lower trap + scapular stability'),
       ],
       conditioning:[]
     },
-    3: { title:'COMPLEX PAIR — FRONT SQUAT + POWER', focus:'Front Squat → Pogo + Accessories', duration:'80-90 min',
-      warmup:[E('T-Spine Opener','2×8 each','Thoracic prep'),E('Front Squat','2×3 @ 60%','Groove')],
-      core:[E('Side Plank Dynamic','3×15 each','Golf anti-sway'),E('Copenhagen Dips','3×10 each','Adductor power')],
+    2: { title:'SPRINT + CONDITIONING + SWING', focus:'Sprints + Row Intervals + Golf Swing Mechanics', duration:'85-95 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:[core[0],E('Bird Dogs','3×10 each','Spinal stability')],
+      main:[
+        ...swingMechanics,
+        E('Linear Sprints 10/20/40m','8×10m + 4×20m + 2×40m','Acceleration — first step quickness'),
+        E('Row Intervals',w<=36?'8×3min @ 1:50/500m':w<=39?'6×4min @ 1:47/500m':'4×5min @ 1:45/500m','Progress pace'),
+        E('Sled Pull (backward)','6×20m','Predator gait + quad activation'),
+      ],
+      conditioning:[]
+    },
+    3: { title:'COMPLEX PAIR — FRONT SQUAT + OHS', focus:'FS → Pogo + OHS + Accessories', duration:'85-95 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:[core[1],E('Copenhagen Dips','3×10 each','Adductor power')],
       main:[
         E('Front Squat','4×3 @ 85%','Rest then jump'),
-        E('→ Pogo Jumps','4×10','Express ankle stiffness post-loading'),
-        E('Landmine Press','4×6 each','Spiral-line + shoulder-safe pressing'),
-        E('Deficit Reverse Lunge','4×6 each @ heavy','Hip flexor + glute overload'),
-        E('SLRDL','3×8 each side','Single-leg hinge mastery'),
+        E('→ Pogo Jumps','4×10','Ankle stiffness post-loading'),
+        E('Overhead Squat','4×3 @ '+(deload?'115 lbs':'155-185 lbs'),'Heavy overhead — express everything built'),
+        E('Landmine Press','4×6 each','Spiral-line pressing'),
+        E('Deficit Reverse Lunge','4×6 each heavy','Hip flexor + glute'),
+        E('SLRDL','3×8 each','Single-leg hinge'),
       ],
-      conditioning:[E('Farmer\'s Carries','4×40m heavy','Grip + total body tension')]
+      conditioning:[E('Farmer\'s Carries','4×40m heavy','Grip + total body')]
     },
-    4: { title:'400m REPEATS + POWER', focus:'400m Intervals + MB Rotational Work', duration:'80-90 min',
-      warmup:[E('Light Jog','5 min','Build gradually'),E('Dynamic Stretching','5 min','Hip + ankle focus')],
-      core:[E('Landmine Rotation','4×8 each','Heavy transverse torque'),E('Rotational MB Slam','4×6 each','Maximum intent')],
+    4: { title:'400m + PRESS + POWER', focus:'400m Intervals + Bench + DB Shoulder + HSPU', duration:'85-95 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:[core[2],E('Rotational MB Slam','4×6 each','Maximum intent')],
       main:[
-        E('400m Repeats',deload?'4×400m w/ 2min rest':'6-8×400m w/ 2min rest','Target: sub-70 sec 400m by W32'),
-        E('Lateral MB Throws','6×5 each side','Lag storage in backswing — clubhead speed transfer'),
-        E('Kneeling Landmine Rot. Press','4×6 each','Spiral line — hip drive emphasis'),
-        E('Bench Press','4×4 @ 83-87%','Maintain pressing strength'),
-        E('DB Shoulder Press','4×6 @ heavy','Direct overhead — shoulder strength peak'),
-        E('Handstand Push-up Progression','3×6-8','Direct shoulder demand + skill development'),
+        E('400m Repeats',deload?'4×400m w/ 2min rest':'6-8×400m w/ 2min rest','Target: sub-70 sec'),
+        E('Lateral MB Throws','6×5 each','Lag storage — clubhead speed transfer'),
+        E('Bench Press','4×4 @ 83-87%','Pressing strength'),
+        E('DB Shoulder Press','4×6 @ 75-85 lbs','Heavy overhead'),
+        E('Handstand Push-up Progression','3×8 wall HSPU','Shoulder demand + skill progression'),
+        E('Kneeling Landmine Rot. Press','4×6 each','Spiral line'),
       ],
       conditioning:[]
     },
-    5: { title:'FULL ATHLETIC EXPRESSION', focus:'Olympic Lifts + Sprint + Jump Complex', duration:'85-95 min',
-      warmup:[E('Full Dynamic Warm-up','10 min','Everything — this is the big day')],
-      core:[E('Ab Roller','4×10','Full extension'),E('Hanging Leg Raises','4×10','Toes to bar')],
+    5: { title:'FULL ATHLETIC EXPRESSION', focus:'Olympic Lifts + Sprints + Jumps + Everything', duration:'90-100 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:[core[0],core[3]],
       main:[
         E('Power Clean','4×2 @ 87-90%','Triple extension — express power'),
         E('Snatch','4×2 @ 83-87%','Vertical RFD expression'),
-        E('Overhead Squat','3×3 @ 78-83%','Full depth overhead — peak stability expression'),
-        E('Snatch Pull','3×3 @ 85-88%','Full extension — peak power through middle'),
-        E('Depth Jumps','4×5','Reactive stiffness — amortization'),
+        E('Overhead Squat','3×3 @ 155-175 lbs','Heavy overhead expression'),
+        E('Snatch Pull','3×3 @ 85-88%','Peak pulling power'),
+        E('Depth Jumps','4×5','Reactive stiffness'),
         E('Broad Jumps','4×4','Horizontal power'),
-        E('Sprints 40m','4×40m @ max effort','Full speed expression'),
+        E('Sprints 40m','4×40m max effort','Full speed'),
       ],
-      conditioning:[E('Sled Push/Pull','6×20m','Zero joint compression — force application')]
+      conditioning:[E('Sled Push/Pull','6×20m','Force application')]
     },
-    6: { title:'RECOVERY / MOBILITY', focus:'DAILY Split Holds + Hip 90/90 + Recovery', duration:'35-45 min',
-      warmup:[E('Light Walk or Cycling','10 min','Zero intensity')],
+    6: { title:'RECOVERY / MOBILITY / GAIT', focus:'Splits + Full Recovery + Predator Walk', duration:'40-50 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
       core:[],
       main:[
-        E('Hip 90/90 (loaded)','2×10 each side w/ 5lb plate','Loaded rotations — progression from BW'),
-        E('Forward Split Holds','4×60 sec each side','Should achieve full splits by W30'),
-        E('Lateral Split Holds','3×45 sec daily hold','Hip base must be full before peak'),
-        E('Kneeling T-Spine Opener','12 reps each','Thoracic maintenance'),
-        E('PVC Over and Back','3×10','Shoulder girdle'),
-        E('Ankle Dorsiflexion','3×15 each','Maintain'),
-        E('Reverse Crab Reaches','3×10 each','Anterior chain opening'),
+        ...mobilityBlock(4),
+        E('Barefoot Walking Drill','5 min','Predator gait — should feel natural by now'),
+        ...gaitProtocol.slice(0,2),
       ],
-      conditioning:[E('Cold/Heat Contrast','15 min','Mandatory after Saturdays — recovery is training')]
+      conditioning:[E('Cold/Heat Contrast','15 min','Recovery is training')]
     }
   };
   return days[dayIdx];
 }
 
 // ═══════════════════════════════════════════════════════════
-// PHASE 5: WEEKS 33-40
+// PHASE 5: YEAR 1 PEAK + TEST (Weeks 43-48)
 // ═══════════════════════════════════════════════════════════
 function getPhase5Day(w, dayIdx){
-  const isDeload = w>=37;
-  const isTesting = w===36;
-  const isPeak = w===33;
-  const volMod = w===34?'Reduce 30%':w===35?'Reduce 50%':w===36?'PEAK WEEK — 1RM attempts':isDeload?'60-65% movement quality only':'Full volume final push';
-  const int = w===33?'90-95%':w===34?'85-90%':w===35?'80-85%':w===36?'MAX':isDeload?'60-65%':'moderate';
+  const isDeload = w>=46;
+  const isTesting = w===45;
+  const int = w===43?'90-95%':w===44?'85-90%':w===45?'MAX':isDeload?'60-65%':'moderate';
+  const core = coreBlock(4);
 
   if(isDeload){
-    // W37-40 active deload
     const days = {
-      0: { title:'MOVEMENT QUALITY', focus:'Light Squat + Mobility + Golf Application', duration:'50-60 min',
-        warmup:[E('Full Dynamic Warm-up','10 min','Movement quality focus')],core:[E('Bird Dogs','3×10 each','Spinal stability'),E('Dead Bug','3×10 each','Anti-extension')],
-        main:[E('Box Back Squat','3×5 @ 60-65%','Perfect form — zero grind'),E('Front Squat','3×5 @ 60-65%','Upright posture check'),E('Hamstring Ground Push & Pull','3×15','Posterior groove')],
-        conditioning:[E('Reverse Hypers','3×12','Spinal maintenance')]
+      0: { title:'MOVEMENT QUALITY', focus:'Light Squat + Mobility', duration:'50-60 min',
+        warmup:(dayIdx%2===0?rightSideA:rightSideB),
+        core:[E('Bird Dogs','3×10 each','Stability'),E('Dead Bug','3×10 each','Anti-extension')],
+        main:[E('Box Back Squat','3×5 @ 60%','Perfect form'),E('Front Squat','3×5 @ 60%','Upright check'),E('Barbell Cossack Squat','3×6 each light','Maintain lateral mobility'),E('Hamstring Ground Push & Pull','3×15','Maintain')],
+        conditioning:[E('Reverse Hypers','3×12','Maintain')]
       },
-      1: { title:'LIGHT UPPER', focus:'Maintenance Volume + Mobility', duration:'45-55 min',
-        warmup:[E('Band Work','5 min','Shoulder prep')],core:[E('Ab Roller','3×8','Maintenance'),E('Landmine Rotation','3×8 each','Light transverse')],
-        main:[E('Pendlay Row','3×5 @ 60%','Maintenance'),E('Pull-ups','3×5 BW','Easy volume'),E('Bench Press','3×5 @ 60%','Maintain pattern'),E('Landmine Press','3×8 each light','Shoulder health')],
+      1: { title:'LIGHT UPPER', focus:'Maintenance', duration:'45-55 min',
+        warmup:(dayIdx%2===0?rightSideA:rightSideB),
+        core:[E('Ab Roller','3×8','Maintain'),E('Landmine Rotation','3×8 each','Light')],
+        main:[E('Pendlay Row','3×5 @ 60%','Maintain'),E('Pull-ups','3×5 BW','Easy'),E('Bench Press','3×5 @ 60%','Maintain'),E('DB Shoulder Press','3×8 light','Maintain')],
         conditioning:[]
       },
       2: { title:'LIGHT CONDITIONING', focus:'Easy Row + Mobility', duration:'45-55 min',
-        warmup:[E('Light Row','5 min','Z1 only')],core:[],
+        warmup:(dayIdx%2===0?rightSideA:rightSideB),
+        core:[],
         main:[E('Row','20-25min @ Z1-Z2','Easy cardiac output'),E('KOT Lunge','3×8 each','Joint health'),E('Sled Push (light)','4×20m','Blood flow')],
-        conditioning:[E('Mobility Circuit','15 min','Hip 90/90 + T-spine + splits')]
+        conditioning:[...mobilityBlock(4).slice(0,5)]
       },
-      3: { title:'GOLF APPLICATION', focus:'Light Power + Rotational Skill', duration:'50-60 min',
-        warmup:[E('Dynamic Warm-up','8 min','Golf-specific movement')],core:[E('Side Plank','3×10 each','Anti-sway maintenance')],
-        main:[E('Lateral MB Throws','4×5 each @ light-moderate','Rotational skill — not max effort'),E('Kneeling Landmine Rot. Press','3×8 each','Spiral line maintenance'),E('Light Sprint Work','4×20m @ 80%','Movement quality')],
-        conditioning:[E('Farmer\'s Carries','3×30m moderate','Grip + tension')]
+      3: { title:'GOLF APPLICATION', focus:'Light Rotational + Swing Mechanics', duration:'50-60 min',
+        warmup:(dayIdx%2===0?rightSideA:rightSideB),
+        core:[E('Side Plank Dynamic','3×10 each','Maintain')],
+        main:[...swingMechanics.slice(0,3),E('Lateral MB Throws','4×5 each light','Skill maintenance'),E('Light Sprint Work','4×20m @ 80%','Movement quality')],
+        conditioning:[E('Farmer\'s Carries','3×30m moderate','Grip')]
       },
-      4: { title:'MOVEMENT QUALITY', focus:'Pattern Maintenance', duration:'40-50 min',
-        warmup:[E('Full Warm-up','8 min','Easy')],core:[E('Ab Roller','3×8','Maintenance'),E('Bird Dogs','3×8 each','Stability')],
-        main:[E('Power Clean','5×1 @ 60-65%','Crisp singles — movement quality only'),E('Snatch','5×1 @ 60-65%','Perfect pattern'),E('Light BSS','3×6 each BW','Unilateral maintenance')],
+      4: { title:'PATTERN MAINTENANCE', focus:'Light Olympic + Unilateral', duration:'40-50 min',
+        warmup:(dayIdx%2===0?rightSideA:rightSideB),
+        core:[E('Ab Roller','3×8','Maintain'),E('Bird Dogs','3×8 each','Stability')],
+        main:[E('Power Clean','5×1 @ 60%','Crisp singles'),E('Snatch','5×1 @ 60%','Perfect pattern'),E('Overhead Squat','3×5 light','Maintain overhead'),E('Light BSS','3×6 each BW','Maintain')],
         conditioning:[]
       },
-      5: { title:'LIGHT EXPRESSION', focus:'Easy Jumps + MB Work', duration:'45-55 min',
-        warmup:[E('Dynamic Warm-up','8 min','Full body')],core:[],
-        main:[E('Pogo Jumps','3×10','Ankle stiffness'),E('Broad Jumps','3×3','Easy power'),E('Lateral MB Throws','3×4 each','Skill maintenance'),E('Row','15min @ Z1','Flush')],
-        conditioning:[E('Full Mobility Circuit','15 min','Everything')]
+      5: { title:'LIGHT EXPRESSION', focus:'Easy Jumps + MB', duration:'45-55 min',
+        warmup:(dayIdx%2===0?rightSideA:rightSideB),
+        core:[],
+        main:[E('Pogo Jumps','3×10','Ankle stiffness'),E('Broad Jumps','3×3','Easy power'),E('Lateral MB Throws','3×4 each','Skill'),E('Row','15min @ Z1','Flush')],
+        conditioning:[...mobilityBlock(4).slice(0,5)]
       },
-      6: { title:'RECOVERY / MOBILITY', focus:'Full Recovery Protocol', duration:'30-40 min',
-        warmup:[E('Light Walk','10 min','Blood flow')],core:[],
-        main:[E('Hip 90/90','3 min each','Maintain full IR'),E('Forward Splits','3×60 sec each','Maintain'),E('Lateral Splits','3×45 sec','Maintain'),E('T-Spine Opener','10 each','Maintain'),E('PVC Over and Back','3×10','Shoulders'),E('Breathing Work','5 min','Box breathing 4-4-4-4')],
+      6: { title:'RECOVERY / MOBILITY', focus:'Full Recovery', duration:'35-45 min',
+        warmup:(dayIdx%2===0?rightSideA:rightSideB),
+        core:[],
+        main:[...mobilityBlock(4),E('Barefoot Walking Drill','5 min','Maintain predator gait'),E('Breathing Work','5 min','Box breathing')],
         conditioning:[]
       }
     };
     return days[dayIdx];
   }
 
-  // W33-36 peak/test weeks
+  // Weeks 43-45: Peak and Test
   const days = {
-    0: { title: isTesting?'1RM TEST — SQUAT + DEADLIFT':'HEAVY LOWER — PEAK', focus: isTesting?'ALL LIFTS TESTED':'Back Squat + Front Squat @ '+int, duration:'85-95 min',
-      warmup:[E('Full Dynamic Warm-up','10 min','Peak CNS prep')],
-      core:[E('Ab Roller','3×10','Anti-extension'),E('Side Plank','3×12 each','Anti-sway')],
+    0: { title: isTesting?'1RM TEST — SQUAT':'HEAVY LOWER PEAK', focus: isTesting?'ALL SQUAT LIFTS TESTED':'Squat + FS @ '+int, duration:'90 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:core.slice(0,2),
       main: isTesting ? [
-        E('Box Back Squat — 1RM Test','Work to max','Record. Compare to 335 lb baseline.'),
-        E('Front Squat — 1RM Test','Work to max','Target: 390-405 lbs'),
+        E('Box Back Squat — 1RM Test','Work to max','Target: 500-530 lbs. Compare to 405 baseline.'),
+        E('Front Squat — 1RM Test','Work to max','Target: 345-365 lbs'),
+        E('Overhead Squat — 1RM Test','Work to max','Target: 225-245 lbs with perfect depth'),
+        E('Barbell Cossack Squat — Max Test','Work to heavy 3 each side','Target: 155-175 each'),
         E('BB Hip Thrust — 1RM Test','Work to max','Glute force peak'),
       ] : [
-        E('Box Back Squat','4×3 @ '+int,'Peak loading — quality'),
+        E('Box Back Squat','4×3 @ '+int,'Peak loading'),
         E('Front Squat','4×2 @ '+int,'Anterior pillar peak'),
-        E('BB Hip Thrust','4×3 @ 87-90%','Glute engine peak'),
+        E('Overhead Squat','4×2 @ 85-90%','Overhead peak'),
+        E('BB Hip Thrust','4×3 @ 87-90%','Glute peak'),
       ],
       conditioning:[E('Reverse Hypers','3×12','Decompress')]
     },
-    1: { title: isTesting?'1RM TEST — CLEAN + SNATCH + ROW':'OLYMPIC LIFT PEAK', focus: isTesting?'All Olympic lifts tested':'Clean + Snatch @ '+int, duration:'85-95 min',
-      warmup:[E('Olympic Warm-up Sequence','10 min','Muscle clean + hang snatch + OHS')],
-      core:[E('Hanging Leg Raises','3×12','Anti-extension'),E('Landmine Rotation','3×8 each','Transverse')],
+    1: { title: isTesting?'1RM TEST — OLYMPIC + ROW':'OLYMPIC PEAK', focus: isTesting?'Clean + Snatch + Row tested':'Peak loading', duration:'90 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:core.slice(2,4),
       main: isTesting ? [
-        E('Power Clean — 1RM Test','Work to max','Target: 305-315 lbs'),
-        E('Snatch — 1RM Test','Work to max','Target: 180-185 lbs. From 115 lb baseline.'),
-        E('Pendlay Row — 1RM Test','Work to max','Target: 305-315 lbs'),
+        E('Power Clean — 1RM Test','Work to max','Target: 275-295 lbs'),
+        E('Snatch — 1RM Test','Work to max','Target: 165-175 lbs. From 105 baseline.'),
+        E('Pendlay Row — 1RM Test','Work to max','Target: 245-265 lbs'),
+        E('Weighted Pull-ups — Max Test','+90 lbs x max reps','Target: +90-100 × 5'),
       ] : [
         E('Power Clean','5×2 @ '+int,'Technical max quality'),
         E('Snatch','5×2 @ '+int,'Vertical RFD peak'),
         E('Pendlay Row','4×3 @ '+int,'Horizontal pull peak'),
-        E('Weighted Pull-ups','4×3 @ +80-85 lbs','Max vertical density'),
+        E('Weighted Pull-ups','4×3 @ +80-90 lbs','Max density'),
       ],
       conditioning:[]
     },
-    2: { title: w===34?'SPRINT TEST + JUMP TEST':w===35?'ROW 2000m TEST + CLUB SPEED':isTesting?'BENCH + REMAINING TESTS':'SPRINT + CONDITIONING PEAK', 
-      focus: w===34?'Sprint + Vertical + Broad Jump tests':w===35?'2000m Row + Clubhead speed test':isTesting?'Bench 1RM + Final metrics':'Sprints + Row @ '+int, duration:'80-90 min',
-      warmup:[E('Full Dynamic Warm-up','10 min','Test day prep')],
-      core:[E('Ab Roller','3×8','Maintenance')],
-      main: w===34 ? [
-        E('100m Sprint Test','3 attempts, best of 3','Target: Sub 11.2 sec'),
-        E('Vertical Jump Test','3 attempts','Target: 35-37 inches'),
-        E('Broad Jump Test','3 attempts','Target: 9\'6\"+'),
+    2: { title: w===44?'SPRINT + JUMP TEST':isTesting?'BENCH + CONDITIONING TEST':'SPRINT + CONDITIONING PEAK', 
+      focus: w===44?'Sprint + Jump tests':isTesting?'Bench + Row + Clubhead tests':'Peak conditioning', duration:'85 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:[core[0]],
+      main: w===44 ? [
+        E('100m Sprint Test','3 attempts, best of 3','Target: sub 11.3'),
+        E('Vertical Jump Test','3 attempts','Record best'),
+        E('Broad Jump Test','3 attempts','Record best'),
         E('40m Sprint','3 attempts','Record best'),
-      ] : w===35 ? [
-        E('2000m Row Test','1 all-out effort','Target: Sub 6:30 (1:37/500m)'),
-        E('Driver Clubhead Speed Test','10 swings, record best','Target: 133+ mph'),
-        E('400m Sprint Test','2 attempts','Target: Sub 65 seconds'),
       ] : isTesting ? [
-        E('Bench Press — 1RM Test','Work to max','Target: 345-355 lbs'),
-        E('Weighted Pull-ups — Max Test','+90 lbs x max reps','Target: +90 lbs × 5'),
-        E('Ab Roller from Full Extension','Test 3×15','Core benchmark'),
-        E('Side Plank','Test 3×20','Anti-sway benchmark'),
-        E('Plank Hold','Max time','Target: 3 min'),
+        E('Bench Press — 1RM Test','Work to max','Target: 305-315 × 3'),
+        E('2000m Row Test','1 all-out effort','Target: 1:45/500m split'),
+        E('Driver Clubhead Speed Test','10 swings, record best','Target: 131-133 mph'),
+        E('10K Run Test','Track or treadmill','Target: 40-43 min. First ever baseline.'),
       ] : [
         E('Sprints','6×10m + 4×20m + 2×40m','Peak sprint work'),
-        E('Row Intervals','4×5min @ 1:42-45/500m','Peak conditioning'),
+        E('Row Intervals','4×5min @ 1:45/500m','Peak conditioning'),
         E('Sled Push/Pull','6×20m','Force application'),
       ],
       conditioning:[]
     },
-    3: { title:'ROTATIONAL POWER + ACCESSORIES', focus:'MB Throws + Landmine + Unilateral', duration:'70-80 min',
-      warmup:[E('Dynamic Warm-up','8 min','Rotational focus')],
-      core:[E('Landmine Rotation','4×8 each','Peak transverse torque'),E('Rotational MB Slam','4×6 each','Maximum intent')],
+    3: { title:'ROTATIONAL POWER PEAK', focus:'MB + Landmine + Swing Mechanics + Unilateral', duration:'80 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:[core[2],E('Rotational MB Slam','4×6 each','Maximum intent')],
       main:[
-        E('Lateral MB Throws','6×5 each side','Peak rotational velocity — measure distance'),
-        E('Kneeling Landmine Rot. Press','4×6 each','Spiral line peak'),
-        E('BSS','4×6 each @ 80-85%','Unilateral strength maintenance'),
-        E('Nordic Curls','4×5','Hamstring protection maintenance'),
+        ...swingMechanics,
+        E('Lateral MB Throws','6×5 each','Peak rotational velocity — measure and record'),
+        E('BSS','4×6 each @ 80-85%','Unilateral maintenance'),
+        E('Nordic Curls','4×5','Hamstring maintenance'),
         E('Copenhagen Dips','3×10 each','Adductor maintenance'),
       ],
-      conditioning:[E('Farmer\'s Carries','4×40m heavy','Grip + tension peak')]
+      conditioning:[E('Farmer\'s Carries','4×40m heavy','Peak grip + tension')]
     },
-    4: { title:'UPPER PRESS + POWER', focus:'Bench + Landmine Press + HSPU', duration:'70-80 min',
-      warmup:[E('Band Work + Push-ups','5 min','Press prep')],
-      core:[E('Ab Roller','3×10','Maintenance'),E('Side Plank','3×12 each','Anti-sway')],
+    4: { title:'UPPER PRESS PEAK', focus:'Bench + DB Shoulder + Landmine + HSPU', duration:'75 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:[core[0],core[1]],
       main:[
         E('Bench Press','4×3 @ '+int,'Horizontal press peak'),
-        E('DB Shoulder Press','4×5 @ heavy','Direct overhead pressing — peak strength'),
-        E('Landmine Press','4×6 each arm @ heavy','Spiral-line peak'),
-        E('Handstand Push-up Progression','4×6-8','Shoulder demand peak — progress toward freestanding'),
-        E('DB Pullovers','3×12','DB Pullovers — shoulder-safe arc'),
-        E('Band External Rotations','3×15 each','Rotator cuff protection — peak phase'),
-        E('Y/T/W Raises','2×8 each','Lower trap + scapular stability'),
+        E('DB Shoulder Press','4×5 @ 80-90 lbs','Overhead peak'),
+        E('Landmine Press','4×6 each heavy','Spiral-line peak'),
+        E('Handstand Push-up Progression','4×6-8 wall HSPU','Shoulder demand peak'),
+        E('DB Pullovers','3×12','Shoulder-safe arc'),
+        E('Band External Rotations','3×15 each','Rotator cuff maintenance'),
+        E('Y/T/W Raises','2×8 each','Lower trap + scapular'),
       ],
-      conditioning:[E('Sled Push','4×20m','Active recovery tool')]
+      conditioning:[E('Sled Push','4×20m','Active recovery')]
     },
-    5: { title:'FULL EXPRESSION DAY', focus:'Everything — Jumps + Sprints + MB + Lifts', duration:'85-95 min',
-      warmup:[E('Full Dynamic Warm-up','10 min','Peak day')],
-      core:[E('Ab Roller','3×10','Peak'),E('Hanging Leg Raises','3×10','Peak')],
+    5: { title:'FULL EXPRESSION', focus:'Everything — Peak Athletic Output', duration:'90 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:[core[0],core[3]],
       main:[
-        E('Trap Bar Jumps','4×4 @ heavy','Loaded vertical peak'),
+        E('Trap Bar Jumps','4×4 heavy','Loaded vertical peak'),
         E('Depth Jumps','4×5','Reactive stiffness peak'),
         E('Sprints 10/20/40m','6×10m + 3×20m + 2×40m','Sprint peak'),
         E('Lateral MB Throws','5×5 each','Rotational peak'),
@@ -1218,25 +1298,17 @@ function getPhase5Day(w, dayIdx){
       ],
       conditioning:[E('Sled Push/Pull','4×20m','Finish strong')]
     },
-    6: { title:'RECOVERY / MOBILITY', focus:'Splits + Full Recovery Protocol', duration:'35-45 min',
-      warmup:[E('Light Walk','10 min','Zero intensity')],core:[],
-      main:[
-        E('Hip 90/90 (loaded)','2×10 each w/ plate','Maintain full IR'),
-        E('Forward Splits','4×60 sec each','Should be full by now'),
-        E('Lateral Splits','3×60 sec','Full hip base'),
-        E('T-Spine Opener','12 each','Maintain'),
-        E('PVC Over and Back','3×10','Maintain'),
-        E('Full Breathing Protocol','5-10 min','Box breathing + parasympathetic activation'),
-      ],
+    6: { title:'RECOVERY / MOBILITY', focus:'Full Recovery Protocol', duration:'40 min',
+      warmup:(dayIdx%2===0?rightSideA:rightSideB),
+      core:[],
+      main:[...mobilityBlock(4),E('Barefoot Walking Drill','5 min','Predator gait assessment — how far have you come?'),E('Full Breathing Protocol','5 min','Box breathing + parasympathetic')],
       conditioning:[]
     }
   };
   return days[dayIdx];
 }
 
-// ═══════════════════════════════════════════════════════════
-// MASTER: GET DAY DATA
-// ═══════════════════════════════════════════════════════════
+// MASTER
 function getDayData(week, dayIdx){
   const pn = getPhaseNum(week);
   if(pn===1) return getPhase1Day(week, dayIdx);
@@ -1245,7 +1317,6 @@ function getDayData(week, dayIdx){
   if(pn===4) return getPhase4Day(week, dayIdx);
   return getPhase5Day(week, dayIdx);
 }
-
 // ═══════════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════════
@@ -1483,7 +1554,7 @@ function calcCurrentWeek(){
   const totalDays = Math.floor(diff / (1000*60*60*24));
   const week = Math.floor(totalDays / 7) + 1;
   const day = totalDays % 7; // 0=Mon
-  return {week: Math.min(Math.max(week,1),40), day: Math.min(day,6)};
+  return {week: Math.min(Math.max(week,1),48), day: Math.min(day,6)};
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1514,7 +1585,7 @@ function renderWorkout(){
   h += `<div class="dh-code">W${curWeek} — ${DAYNAMES[curDay]} — ${data.title}</div>`;
   h += `<div class="dh-meta">`;
   h += `<div class="dh-m"><div class="dh-m-l">Phase</div><div class="dh-m-v">${phase.n}</div></div>`;
-  h += `<div class="dh-m"><div class="dh-m-l">Week</div><div class="dh-m-v">${curWeek} / 40</div></div>`;
+  h += `<div class="dh-m"><div class="dh-m-l">Week</div><div class="dh-m-v">${curWeek} / 48</div></div>`;
   h += `<div class="dh-m"><div class="dh-m-l">Focus</div><div class="dh-m-v">${data.focus}</div></div>`;
   h += `<div class="dh-m"><div class="dh-m-l">Duration</div><div class="dh-m-v">${data.duration}</div></div>`;
   h += `</div>`;
@@ -2115,36 +2186,79 @@ function renderPlan(){
 function renderStats(){
   const p = document.getElementById('p-stats');
   const prs = getPRs();
-  const targets = {
-    'Box Back Squat':{cur:335,target:585},'Front Squat':{cur:265,target:405},
-    'Power Clean':{cur:225,target:315},'Snatch':{cur:115,target:185},
-    'Bench Press':{cur:285,target:350},'Pendlay Row':{cur:200,target:315},
-  };
   const comp = getCompletions();
   const totalSessions = Object.keys(comp).filter(k=>comp[k]).length;
   const totalPossible = curWeek * 7;
 
-  let h = `<div class="ph-title" style="margin-bottom:20px;">PROGRAM STATISTICS</div>`;
+  // All metrics: current, Y1 target, 3-year target
+  const liftTargets = [
+    {name:'Box Back Squat',cur:'405×3',curNum:405,y1:530,y3:675,unit:'lbs'},
+    {name:'Front Squat',cur:'185×8',curNum:185,y1:365,y3:540,unit:'lbs'},
+    {name:'Overhead Squat',cur:'135×5',curNum:135,y1:245,y3:315,unit:'lbs'},
+    {name:'Power Clean',cur:'170×6',curNum:170,y1:295,y3:400,unit:'lbs'},
+    {name:'Snatch',cur:'105×3',curNum:105,y1:175,y3:230,unit:'lbs'},
+    {name:'Pendlay Row',cur:'135×6',curNum:135,y1:265,y3:315,unit:'lbs'},
+    {name:'Weighted Pull-up',cur:'+25×6',curNum:25,y1:100,y3:175,unit:'lbs'},
+    {name:'Weighted Chin-up',cur:'+25×5',curNum:25,y1:100,y3:175,unit:'lbs'},
+    {name:'Bench Press',cur:'285×1',curNum:285,y1:315,y3:315,unit:'lbs'},
+    {name:'DB Shoulder Press',cur:'65×8',curNum:65,y1:90,y3:100,unit:'lbs'},
+    {name:'Bulgarian Split Squat',cur:'100×8',curNum:100,y1:185,y3:315,unit:'lbs'},
+    {name:'Barbell Cossack Squat',cur:'BW',curNum:0,y1:175,y3:315,unit:'lbs'},
+    {name:'Trap Bar Jumps',cur:'135×5',curNum:135,y1:225,y3:315,unit:'lbs'},
+  ];
+  const condTargets = [
+    {name:'2000m Row',cur:'2:05/500m',curNum:125,y1:105,y3:95,unit:'/500m',lower:true},
+    {name:'100m Sprint',cur:'~12.0 sec',curNum:12,y1:11.3,y3:10.7,unit:'sec',lower:true},
+    {name:'10K Run',cur:'~55 min',curNum:55,y1:42,y3:31,unit:'min',lower:true},
+    {name:'400m Run',cur:'N/A',curNum:90,y1:70,y3:62,unit:'sec',lower:true},
+  ];
+  const golfTargets = [
+    {name:'Driver Clubhead Speed',cur:'127 mph',curNum:127,y1:133,y3:138,unit:'mph'},
+    {name:'Carry Distance',cur:'310 yds',curNum:310,y1:335,y3:350,unit:'yds'},
+    {name:'Handicap',cur:'8-9',curNum:9,y1:5,y3:0,unit:'',lower:true},
+  ];
+  const mobilityTargets = [
+    {name:'Forward Splits',cur:'Partial',curNum:20,y1:95,y3:100,unit:'%'},
+    {name:'Lateral Splits',cur:'Partial',curNum:15,y1:85,y3:100,unit:'%'},
+    {name:'Right Hip IR',cur:'Restricted',curNum:30,y1:85,y3:100,unit:'%'},
+    {name:'HSPU',cur:'5s wall hold',curNum:5,y1:80,y3:100,unit:'%'},
+  ];
+
+  let h = '';
+
+  // Overview cards
+  h += `<div class="ph-title" style="margin-bottom:20px;">PROGRAM OVERVIEW</div>`;
   h += `<div class="sg">`;
   h += `<div class="sc"><div class="sc-l">Sessions Completed</div><div class="sc-v">${totalSessions}</div><div class="sc-s">of ${totalPossible} possible</div></div>`;
-  h += `<div class="sc"><div class="sc-l">Current Week</div><div class="sc-v">${curWeek}</div><div class="sc-s">of 40 weeks</div></div>`;
+  h += `<div class="sc"><div class="sc-l">Current Week</div><div class="sc-v">${curWeek}</div><div class="sc-s">of 48 · Year 1</div></div>`;
   h += `<div class="sc"><div class="sc-l">Phase</div><div class="sc-v">${getPhaseNum(curWeek)}</div><div class="sc-s">${getPhase(curWeek).n}</div></div>`;
-  h += `<div class="sc"><div class="sc-l">Completion Rate</div><div class="sc-v">${totalPossible?Math.round(totalSessions/totalPossible*100):0}%</div><div class="sc-s">consistency tracker</div></div>`;
+  h += `<div class="sc"><div class="sc-l">Completion Rate</div><div class="sc-v">${totalPossible?Math.round(totalSessions/totalPossible*100):0}%</div><div class="sc-s">consistency is everything</div></div>`;
   h += `</div>`;
 
-  h += `<div class="ph-title" style="margin-bottom:16px; margin-top:12px;">LIFT PROGRESS VS TARGET</div>`;
-  Object.keys(targets).forEach(lift=>{
-    const t = targets[lift];
-    const curPR = prs[lift] || t.cur;
-    const pct = Math.min(Math.round((curPR-t.cur)/(t.target-t.cur)*100),100);
-    h += `<div class="sc" style="margin-bottom:12px;">`;
-    h += `<div style="display:flex;justify-content:space-between;align-items:center;">`;
-    h += `<div class="sc-l">${lift}</div>`;
-    h += `<div style="font-family:'LEMON MILK',sans-serif;font-size:10px;letter-spacing:1px;color:var(--blue);">${curPR} / ${t.target} lbs</div>`;
-    h += `</div>`;
-    h += `<div class="prog-bar"><div class="prog-fill" style="width:${Math.max(pct,2)}%"></div></div>`;
-    h += `</div>`;
-  });
+  // Helper for progress sections
+  function renderSection(title, items){
+    h += `<div class="ph-title" style="margin-bottom:14px;margin-top:28px;">${title}</div>`;
+    items.forEach(t=>{
+      const curPR = prs[t.name] || t.curNum;
+      const range = t.y1 - t.curNum;
+      const progress = range !== 0 ? Math.min(Math.max(Math.round(((curPR - t.curNum) / range) * 100),0),100) : 0;
+      h += `<div class="sc" style="margin-bottom:8px;">`;
+      h += `<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">`;
+      h += `<div><div class="sc-l" style="margin-bottom:2px;">${t.name}</div>`;
+      h += `<div style="font-size:10px;color:var(--text-tertiary);">Start: ${t.cur}</div></div>`;
+      h += `<div style="text-align:right;">`;
+      h += `<div style="font-family:'LEMON MILK',sans-serif;font-size:11px;letter-spacing:1px;color:var(--text);">Y1: ${t.y1}${t.unit?(' '+t.unit):''}</div>`;
+      h += `<div style="font-size:9px;color:var(--text-tertiary);">3YR: ${t.y3}${t.unit?(' '+t.unit):''}</div>`;
+      h += `</div></div>`;
+      h += `<div class="prog-bar"><div class="prog-fill" style="width:${Math.max(progress,2)}%"></div></div>`;
+      h += `</div>`;
+    });
+  }
+
+  renderSection('STRENGTH', liftTargets);
+  renderSection('CONDITIONING', condTargets);
+  renderSection('GOLF PERFORMANCE', golfTargets);
+  renderSection('MOBILITY + SKILLS', mobilityTargets);
 
   p.innerHTML = h;
 }
@@ -2184,7 +2298,7 @@ function renderAll(){
   const phase = getPhase(curWeek);
   const pn = getPhaseNum(curWeek);
   document.getElementById('phaseTag').textContent = `Phase ${pn} · Week ${curWeek}`;
-  document.getElementById('weekLbl').textContent = `Week ${curWeek} / 40`;
+  document.getElementById('weekLbl').textContent = `Week ${curWeek} / 48`;
 
   renderDayTabs();
   renderWorkout();
@@ -2206,7 +2320,7 @@ function nav(view){
 }
 
 function chgWeek(dir){
-  curWeek = Math.min(Math.max(curWeek+dir,1),40);
+  curWeek = Math.min(Math.max(curWeek+dir,1),48);
   curDay = 0;
   renderAll();
 }
