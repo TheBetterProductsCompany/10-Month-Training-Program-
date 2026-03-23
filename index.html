@@ -537,7 +537,7 @@ body {
   <div class="l-pre">AUDIT SYSTEM</div>
   <div class="l-title">RELENTLESS 42</div>
   <div class="l-sub">40 WEEK PROTOCOL</div>
-  <input type="password" id="pw" placeholder="ENTER CODE" autocomplete="off">
+  <input type="password" id="pw" placeholder="ENTER CODE" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
   <button class="l-btn" onclick="doLogin()">ACCESS</button>
   <div class="l-err" id="lerr">INCORRECT ACCESS CODE</div>
 </div>
@@ -589,11 +589,12 @@ body {
 // ═══════════════════════════════════════════════════════════
 const PW='Spyder1';
 function doLogin(){
-  if(document.getElementById('pw').value===PW){
+  const val = document.getElementById('pw').value;
+  if(val===PW){
     document.getElementById('login').classList.add('out');
     document.getElementById('app').classList.add('on');
     localStorage.setItem('r42auth','1');
-    startApp();
+    try { startApp(); } catch(e) { alert('App error: '+e.message); console.error(e); }
   } else {
     document.getElementById('lerr').classList.add('on');
     setTimeout(()=>document.getElementById('lerr').classList.remove('on'),2000);
