@@ -637,161 +637,72 @@ function getPhase(w){return PHASES.find(p=>w>=p.wks[0]&&w<=p.wks[1])||PHASES[0];
 function getPhaseNum(w){return PHASES.findIndex(p=>w>=p.wks[0]&&w<=p.wks[1])+1;}
 function E(name,detail,note){return{name,detail,note:note||''};}
 
-// ═══════════════════════════════════════════════════════════
-// PROGRESSION CURVES — Start → Year 1 Target
-// Power Clean: 170→290  Back Squat: 405→520  OHS: 135→240
-// Snatch: 105→175  Pendlay Row: 135→260  Bench: 285→315
-// Pull-ups: +25→+95  Chin-ups: +25→+70  DB Press: 65→90
-// Hip Thrust: 225→365  Cossack: 0→170  BSS: 100→185
-// Trap Bar Jump: 135→225  Ring Dip: BW→+45
-// 2000m Row: 2:05→1:45/500  100m: 12.0→11.3  10K: 55→42min
-// 400m: 90s→68s  Row 500m pace: 2:05→1:47
-// ═══════════════════════════════════════════════════════════
-
+// PROGRESSION CURVES
 function dl(w){return w===4||w===8||w===12||w===16||w===20||w===24||w===28||w===32||w===36||w===40||w===44||w>=49;}
 function isConv(w){return w>=25&&w<=36&&!dl(w);}
 function isExpr(w){return w>=37&&w<=44&&!dl(w);}
 function isPeak(w){return w>=45&&w<=48;}
 function isDeload(w){return w>=49;}
 function isWave(w){return w>=13&&w<=24&&!dl(w);}
+function lerp(s,e,w,sw,ew){if(w>=ew)return e;return Math.round(s+(e-s)*((w-sw)/(ew-sw)));}
+function r5(n){return Math.round(n/5)*5;}
 
-// Linear interpolation helper
-function lerp(start,end,w,startW,endW){
-  if(w>=endW) return end;
-  const pct=(w-startW)/(endW-startW);
-  return Math.round(start+(end-start)*pct);
-}
-function r5(n){return Math.round(n/5)*5;} // round to nearest 5
-
-// Specific weight targets by week
-function cleanWt(w){
-  if(dl(w)) return r5(lerp(170,290,Math.max(w-1,1),1,44)*0.6);
-  return r5(lerp(170,290,w,1,44));
-}
-function sqWt(w){
-  if(dl(w)) return r5(lerp(405,520,Math.max(w-1,1),1,44)*0.6);
-  return r5(lerp(405,520,w,1,44));
-}
-function ohsWt(w){
-  if(dl(w)) return r5(lerp(95,240,Math.max(w-1,1),1,44)*0.55);
-  if(w<=4) return r5(lerp(45,75,w,1,4));
-  return r5(lerp(75,240,w,5,44));
-}
-function snWt(w){
-  if(dl(w)) return r5(lerp(65,175,Math.max(w-1,1),1,44)*0.55);
-  if(w<=4) return r5(lerp(45,75,w,1,4));
-  return r5(lerp(65,175,w,5,44));
-}
-function rowWt(w){
-  if(dl(w)) return r5(lerp(135,260,Math.max(w-1,1),1,44)*0.6);
-  return r5(lerp(135,260,w,1,44));
-}
-function benchWt(w){
-  if(w<=12) return 0; // Landmine Press phase
-  if(dl(w)) return r5(lerp(225,315,Math.max(w-1,13),13,44)*0.6);
-  return r5(lerp(225,315,w,13,44));
-}
-function puWt(w){
-  if(dl(w)) return Math.max(0,lerp(10,95,Math.max(w-1,1),1,44)-20);
-  return lerp(10,95,w,1,44);
-}
-function chinWt(w){
-  if(dl(w)) return 0;
-  if(w<=8) return 0;
-  return lerp(15,70,w,9,44);
-}
-function pressWt(w){
-  if(dl(w)) return r5(lerp(45,90,Math.max(w-1,1),1,44)*0.6);
-  return r5(lerp(45,90,w,1,44));
-}
-function htWt(w){
-  if(dl(w)) return r5(lerp(225,365,Math.max(w-1,1),1,44)*0.6);
-  return r5(lerp(225,365,w,1,44));
-}
-function cosWt(w){
-  if(dl(w)) return w<=8?0:r5(lerp(0,170,Math.max(w-1,1),1,44)*0.5);
-  if(w<=4) return 0; // BW
-  if(w<=8) return r5(lerp(0,45,w,5,8));
-  return r5(lerp(45,170,w,9,44));
-}
-function bssWt(w){
-  if(dl(w)) return r5(lerp(65,185,Math.max(w-1,1),1,44)*0.55);
-  return r5(lerp(65,185,w,1,44));
-}
-function tbjWt(w){
-  if(dl(w)) return r5(lerp(95,225,Math.max(w-1,1),1,44)*0.5);
-  return r5(lerp(95,225,w,1,44));
-}
-function spWt(w){
-  if(dl(w)) return r5(snWt(Math.max(w-1,1))*1.15*0.6);
-  return r5(snWt(w)*1.15);
-}
+function cleanWt(w){if(dl(w))return r5(lerp(170,290,Math.max(w-1,1),1,44)*0.6);return r5(lerp(170,290,w,1,44));}
+function sqWt(w){if(dl(w))return r5(lerp(405,520,Math.max(w-1,1),1,44)*0.6);return r5(lerp(405,520,w,1,44));}
+function ohsWt(w){if(dl(w))return r5(lerp(95,240,Math.max(w-1,1),1,44)*0.55);if(w<=4)return r5(lerp(45,75,w,1,4));return r5(lerp(75,240,w,5,44));}
+function snWt(w){if(dl(w))return r5(lerp(65,175,Math.max(w-1,1),1,44)*0.55);if(w<=4)return r5(lerp(45,75,w,1,4));return r5(lerp(65,175,w,5,44));}
+function rowWt(w){if(dl(w))return r5(lerp(135,260,Math.max(w-1,1),1,44)*0.6);return r5(lerp(135,260,w,1,44));}
+function benchWt(w){if(w<=12)return 0;if(dl(w))return r5(lerp(225,315,Math.max(w-1,13),13,44)*0.6);return r5(lerp(225,315,w,13,44));}
+function puWt(w){if(dl(w))return Math.max(0,lerp(10,95,Math.max(w-1,1),1,44)-20);return lerp(10,95,w,1,44);}
+function chinWt(w){if(dl(w))return 0;if(w<=8)return 0;return lerp(15,70,w,9,44);}
+function pressWt(w){if(dl(w))return r5(lerp(45,90,Math.max(w-1,1),1,44)*0.6);return r5(lerp(45,90,w,1,44));}
+function htWt(w){if(dl(w))return r5(lerp(225,365,Math.max(w-1,1),1,44)*0.6);return r5(lerp(225,365,w,1,44));}
+function cosWt(w){if(dl(w))return w<=8?0:r5(lerp(0,170,Math.max(w-1,1),1,44)*0.5);if(w<=4)return 0;if(w<=8)return r5(lerp(0,45,w,5,8));return r5(lerp(45,170,w,9,44));}
+function bssWt(w){if(dl(w))return r5(lerp(65,185,Math.max(w-1,1),1,44)*0.55);return r5(lerp(65,185,w,1,44));}
+function tbjWt(w){if(dl(w))return r5(lerp(95,225,Math.max(w-1,1),1,44)*0.5);return r5(lerp(95,225,w,1,44));}
+function spWt(w){if(dl(w))return r5(snWt(Math.max(w-1,1))*1.15*0.6);return r5(snWt(w)*1.15);}
 function lungeWt(w){return r5(sqWt(w)*0.35);}
-function lmpWt(w){return r5(lerp(35,70,w,1,12));} // Landmine press weeks 1-12
-
-// Sets x Reps by phase
-function setsReps(w,base){
-  if(dl(w)) return '3×5';
-  if(w<=12) return '4×'+(w<=4?'6':w<=8?'6':'5');
-  if(isWave(w)){
-    const wk=((w-1)%4)+1;
-    if(w<=16) return wk===1?'10-8-6-5':wk===2?'10-8-6-5':wk===3?'8-6-5-3':'3×5';
-    if(w<=20) return wk===1?'8-6-4-2':wk===2?'6-4-3-2':wk===3?'6-4-2-1':'3×4';
-    return wk===1?'5-3-2-1':wk===2?'5-3-1-1':wk===3?'4-2-1-1':'3×3';
-  }
-  if(isConv(w)) return 'Daily Max + 3×2 backoff';
-  if(isExpr(w)) return w<=40?'4×3':'4×2';
-  return base||'4×5';
+function lmpWt(w){return r5(lerp(35,70,w,1,12));}
+function setsReps(w){
+  if(dl(w))return'3×5';if(w<=12)return'4×'+(w<=4?'6':w<=8?'6':'5');
+  if(isWave(w)){const wk=((w-1)%4)+1;if(w<=16)return wk<=2?'10-8-6-5':wk===3?'8-6-5-3':'3×5';if(w<=20)return wk===1?'8-6-4-2':wk===2?'6-4-3-2':wk===3?'6-4-2-1':'3×4';return wk===1?'5-3-2-1':wk===2?'5-3-1-1':wk===3?'4-2-1-1':'3×3';}
+  if(isConv(w))return'Daily Max + 3×2 backoff';if(isExpr(w))return w<=40?'4×3':'4×2';return'4×5';
 }
-
-// Conditioning targets
-function rowPace(w){
-  const start=125; // 2:05/500m in seconds
-  const end=107; // 1:47/500m
-  const sec=lerp(start,end,w,1,44);
-  return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');
-}
-function sprint100(w){
-  const t=lerp(120,113,w,1,44)/10; // 12.0 → 11.3
-  return t.toFixed(1);
-}
-function run10k(w){return lerp(55,42,w,1,44);}
+function rowPace(w){const s=lerp(125,107,w,1,44);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+function sprint100(w){return(lerp(120,113,w,1,44)/10).toFixed(1);}
 function run400(w){return lerp(90,68,w,1,44);}
 function djHeight(w){return w<=20?'30"':w<=32?'33"':'36"';}
-function ringProg(w){
-  if(w<=8) return 'Ring Support Hold 3×20s';
-  if(w<=16) return 'Ring Dip Eccentric 4×4 (5s down)';
-  if(w<=24) return 'Ring Dip 4×5';
-  return 'Ring Dip 4×6 weighted';
-}
+function ringProg(w){if(w<=8)return'Ring Support Hold 3×20s';if(w<=16)return'Ring Dip Eccentric 4×4 (5s down)';if(w<=24)return'Ring Dip 4×5';return'Ring Dip 4×6 weighted';}
+function triStr(w){if(w<=28)return'ECCENTRIC 5s down';if(w<=32)return'ISOMETRIC 3s hold';return'EXPLOSIVE concentric';}
 
-// Conditioning block for Day 2
 function condBlock(w){
-  if(dl(w)) return E('Easy Row','20 min @ Z1','Recovery flush');
-  if(w<=8) return E('Row','20-25 min @ Z2 (pace: '+rowPace(w)+'/500m)','Maffetone aerobic base. HR<153.');
-  if(w<=12) return E('Row + Run','15 min row @ '+rowPace(w)+'/500m + 10 min run','Building dual engine');
-  if(w<=16) return E('400m Repeats','4×400m @ '+run400(w)+'s rest 90s','Lactate threshold introduction');
-  if(w<=24) return E('400m Repeats','6×400m @ '+run400(w)+'s rest 75s','Pushing pace');
-  if(w<=36) return E('400m Repeats','8×400m @ '+run400(w)+'s rest 60s','Target: sub-'+run400(w)+'s');
+  if(dl(w))return E('Easy Row','20 min @ Z1','Recovery flush');
+  if(w<=8)return E('Row','20-25 min @ Z2 (pace: '+rowPace(w)+'/500m)','Maffetone. HR<153.');
+  if(w<=12)return E('Row + Run','15 min row @ '+rowPace(w)+'/500m + 10 min run','Dual engine');
+  if(w<=16)return E('400m Repeats','4×400m @ '+run400(w)+'s rest 90s','Lactate threshold');
+  if(w<=24)return E('400m Repeats','6×400m @ '+run400(w)+'s rest 75s','Pushing pace');
+  if(w<=36)return E('400m Repeats','8×400m @ '+run400(w)+'s rest 60s','Target: sub-'+run400(w)+'s');
   return E('Row Intervals','4×5min @ '+rowPace(w)+'/500m rest 2min','Peak conditioning');
 }
-
-// Sunday conditioning
 function sunCond(w){
-  if(dl(w)) return E('Easy Walk','20-30 min','Full recovery');
-  if(w<=8) return E('Easy Run','20-25 min @ <153bpm','Maffetone. Walk/jog intervals OK.');
-  if(w<=16) return E('Easy Run','30 min @ <153bpm','Building aerobic base');
-  if(w<=24) return E('Run','30-35 min @ Z2','Aerobic progression');
-  if(w<=36) return E('Tempo Run','35 min @ moderate','Pushing pace');
-  if(w<=44) return E('Run','35-40 min @ Z2 with 3×3min tempo bursts','Race prep');
+  if(dl(w))return E('Easy Walk','20-30 min','Full recovery');
+  if(w<=8)return E('Easy Run','20-25 min @ <153bpm','Maffetone. Walk/jog OK.');
+  if(w<=16)return E('Easy Run','30 min @ <153bpm','Aerobic base');
+  if(w<=24)return E('Run','30-35 min @ Z2','Aerobic progression');
+  if(w<=36)return E('Tempo Run','35 min @ moderate','Pushing pace');
+  if(w<=44)return E('Run','35-40 min @ Z2 with 3×3min tempo bursts','Race prep');
   return E('Easy Run','25 min @ Z2','Taper');
 }
 
-// Triphasic string for conversion blocks
-function triStr(w){
-  if(w<=28) return 'ECCENTRIC 5s down';
-  if(w<=32) return 'ISOMETRIC 3s hold';
-  return 'EXPLOSIVE concentric';
+// CALF VARIATIONS — rotate daily for frequency + variety
+function calfWork(d){
+  if(d===0) return [E('Standing Calf Raise (straight knee)','4×8-10 (3s hold at top, 3s eccentric)','Gastrocnemius. Heavy. Full stretch at bottom — heel below step.')];
+  if(d===1) return [E('Pogo Jumps','3×20','Reactive calf stiffness. Ankle springs. Stay on balls of feet.')];
+  if(d===2) return [E('Seated Calf Raise (bent knee)','4×12-15 (3s hold at top, 3s eccentric)','Soleus. Bent knee isolates the deep calf. Width + lower thickness.')];
+  if(d===3) return [E('Single-Leg Calf Raise','3×10 each (2s hold at top)','Unilateral. Exposes bilateral deficit. Right side full range.')];
+  if(d===4) return [E('Standing Calf Raise','4×10 (3s hold, 3s down) + 1×20 bodyweight burnout','Gastroc + endurance finisher. The burnout builds calf density.')];
+  if(d===5) return [E('Tibialis Raise','3×15 + Calf Raise 3×12','Shin + calf superset. Bulletproofs the entire lower leg.')];
+  return [];
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -807,63 +718,55 @@ function getDayData(w,d){
     const main=[];
     main.push(E('Slow Cable Swing','3×6 each dir (16s/rep)','5s back, 3s pause, 5s through, 3s hold'));
     if(isConv(w)){
-      main.push(E('Power Clean — Daily Max','Work to technical max (~6-8 sets)','Visualize. Form breaks = done. Target range: '+cleanWt(w)+' lbs'));
+      main.push(E('Power Clean — Daily Max','Work to technical max','Target range: '+cleanWt(w)+' lbs'));
       main.push(E('Power Clean Back-off','3×2 @ '+r5(cleanWt(w)*0.88)+' lbs','88% of daily max'));
     } else if(isExpr(w)){
-      main.push(E('Power Clean','4×2 @ '+cleanWt(w)+' lbs → Trap Bar Jump 4×4 @ '+tbjWt(w)+' lbs','10-15s transition. Post-activation potentiation.'));
+      main.push(E('Power Clean','4×2 @ '+cleanWt(w)+' lbs → Trap Bar Jump 4×4 @ '+tbjWt(w)+' lbs','Post-activation potentiation'));
     } else {
       main.push(E('Power Clean',setsReps(w)+' @ '+cleanWt(w)+' lbs','Target: '+cleanWt(w)+' lbs'));
     }
-    if(isExpr(w)){
-      main.push(E('Back Squat','4×3 @ '+sqWt(w)+' lbs','Strength base for complex pairs'));
-    } else if(isConv(w)){
-      main.push(E('Back Squat','4×4 @ '+r5(sqWt(w)*0.82)+' lbs','Supporting work — save legs for Day 5 max'));
-    } else {
-      main.push(E('Back Squat',setsReps(w)+' @ '+sqWt(w)+' lbs','Target: '+sqWt(w)+' lbs. Full depth.'));
-    }
-    const htW=htWt(w);
-    const htReps=isConv(w)?'4×4 ('+triStr(w)+')':'4×8';
-    main.push(E('BB Hip Thrust',htReps+' @ '+htW+' lbs'+(DL?'':' + back-off 1×12 @ '+r5(htW*0.65)+' lbs'),'Glute force engine.'+(isConv(w)?' Triphasic: '+triStr(w):'')));
-    main.push(E('SL Slider Hamstring Curl','3×8 each','Right side: full range every rep. No short-arcing.'));
+    main.push(E('Back Squat',(isConv(w)?'4×4 @ '+r5(sqWt(w)*0.82):isExpr(w)?'4×3 @ '+sqWt(w):setsReps(w)+' @ '+sqWt(w))+' lbs','Full depth. Stretch reflex = clubhead speed.'));
+    main.push(E('BB Hip Thrust',(isConv(w)?'4×4 ('+triStr(w)+') @ '+htWt(w):'4×8 @ '+htWt(w))+' lbs'+(DL?'':' + back-off 1×12 @ '+r5(htWt(w)*0.65)+' lbs'),'Glute force engine.'));
+    main.push(E('SL Slider Hamstring Curl','3×8 each','Right side full range. No short-arcing.'));
     return {title:'THE ENGINE',focus:'Power Clean + Back Squat + Hip Thrust',duration:'75 min',
-      warmup:[E('Rower','10 min — build pace each 2 min','Cardiovascular prep')],
+      warmup:[E('Rower','10 min — build pace each 2 min','')],
+      iso:[E('Goblet Squat Hold at Bottom','30 sec','Deepest squat. Heels down. Ankles + hips + T-spine.'),E('SL Glute Bridge Hold at Top','20 sec each','Squeeze glute. Pelvis level. Pre-activates hip thrust.'),E('Dead Hang','30 sec','Spine decompression. Grip + lat pre-load for cleans.')],
       mobility:[E('Hanging Leg Raises','3×10','PPT first'),E('Prone Ball Steamroller','3×30s each dir','Anti-fragmentation. Trunk unity.'),E('DB Goblet Squat Duck Walk','3×10 steps each','Loaded ankle/hip mobility')],
       core:[],main,
-      conditioning:[E('Reverse Hypers','3×12','Spinal decompression')]};
+      conditioning:[E('Reverse Hypers','3×12','Spinal decompression'),...calfWork(0)]};
   }
 
   // ── DAY 2: THE PREDATOR — CONDITIONING FOCUS ──
   if(d===1){
-    const main=[];
-    main.push(E('Sprints','6×10m + 4×20m + 2×40m','Acceleration. Target 100m pace: '+sprint100(w)+'s'));
-    main.push(condBlock(w));
-    main.push(E('Trap Bar Jumps','4×5 @ '+tbjWt(w)+' lbs','Loaded vertical power'));
-    main.push(E('Lateral MB Throw (Golf Stance)','4×5 each','Trail hip loads FIRST. Measure distance monthly.'));
     return {title:'THE PREDATOR',focus:'Sprints + Conditioning + Power',duration:'75 min',
-      warmup:[E('Run','800m build + dynamic stretching','Running mechanics warm-up')],
+      warmup:[E('Run','800m build + dynamic stretching','')],
+      iso:[E('Wall Sit at 90°','30 sec','Sprint loading angle. Exact knee angle at ground contact.'),E('SL Balance Eyes Closed','20 sec each','Proprioception. Foot + ankle + hip must stabilize blind.'),E('Push-up Hold at Bottom','20 sec','Opens anterior shoulder. Pre-loads stabilizers for MB throws.')],
       mobility:[E('Dead Bug (90/90 Breathing)','3×8 each','Pelvic reset — fixes hyperextension'),E('Rotational MB Slam','4×6 each','Explosive rotation'),E('Reverse Crab Reaches','3×8 each','Anterior chain opening')],
-      core:[],main,
-      conditioning:[E('Barefoot Walking Drill','5 min','Predator gait. Slow. Deliberate.')]};
+      core:[],
+      main:[
+        E('Sprints','6×10m + 4×20m + 2×40m','Target 100m pace: '+sprint100(w)+'s'),
+        condBlock(w),
+        E('Trap Bar Jumps','4×5 @ '+tbjWt(w)+' lbs','Loaded vertical power'),
+        E('Lateral MB Throw (Golf Stance)','4×5 each','Trail hip loads FIRST. Measure distance monthly.'),
+      ],
+      conditioning:[E('Barefoot Walking Drill','5 min','Predator gait.'),...calfWork(1)]};
   }
 
   // ── DAY 3: THE ARMOR ──
   if(d===2){
     const rw=rowWt(w);
     const main=[];
-    if(isConv(w)){
-      main.push(E('Pendlay Row','5×3 @ '+rw+' lbs + back-off 1×10 @ '+r5(rw*0.67)+' lbs','Heavy pulling + upper back size'));
-    } else {
-      main.push(E('Pendlay Row',setsReps(w)+' @ '+rw+' lbs + back-off 1×10 @ '+r5(rw*0.67)+' lbs','Target: '+rw+' lbs. +5 lbs/week.'));
-    }
+    main.push(E('Pendlay Row',(isConv(w)?'5×3':'setsReps(w)')+' @ '+rw+' lbs + back-off 1×10 @ '+r5(rw*0.67)+' lbs','Target: '+rw+' lbs'));
     main.push(E('Weighted Pull-ups','4×'+(w<=12?'6':w<=24?'4':'3')+' @ +'+puWt(w)+' lbs','Target: +'+puWt(w)+' lbs'));
     main.push(E('Chin-ups',chinWt(w)>0?'3×6 @ +'+chinWt(w)+' lbs':'3×8 BW','Supinated. Arm thickness.'));
     main.push(E('DB Shoulder Press','4×'+(w<=12?'8':'6')+' @ '+pressWt(w)+' lbs each','Target: '+pressWt(w)+' lbs'));
-    main.push(E('Shoulder Complex','3 rounds: Face Pull ×15 + Band Ext Rot ×15ea + Y/T/W ×8ea','One complex. Flushes rotator cuff.'));
+    main.push(E('Shoulder Complex','3 rounds: Face Pull ×15 + Band Ext Rot ×15ea + Y/T/W ×8ea','Rotator cuff flush after heavy pulling.'));
     return {title:'THE ARMOR',focus:'Upper Pull + Shoulder Health',duration:'75 min',
       warmup:[E('Ski Erg','10 min — build effort','Lat-to-hip pulling pattern')],
+      iso:[E('Dead Hang','30 sec','Lat + grip pre-activation for rows and pull-ups.'),E('Chest-Supported Row Hold at Top','20 sec','DB row held at ribcage. Scap retraction pre-load.'),E('Hollow Body Hold','20 sec','Anti-extension. Prevents arching during heavy pulls.')],
       mobility:[E('Hanging Leg Raises','3×10',''),E('Kneeling Landmine Rot. Press','3×8 each','Spiral line force'),E('DB Pullovers','3×12','Ribcage + lat opening')],
       core:[],main,
-      conditioning:[E('Farmer\'s Carries','4×40m','Total body tension + grip')]};
+      conditioning:[E('Farmer\'s Carries','4×40m','Total body tension + grip'),...calfWork(2)]};
   }
 
   // ── DAY 4: THE SNAKE ──
@@ -871,31 +774,32 @@ function getDayData(w,d){
     const main=[];
     main.push(E('Slow Cable Swing','3×6 each dir (16s/rep)','Post-snatch fluidity'));
     if(isConv(w)){
-      main.push(E('Snatch — Daily Max','Work to technical max (~6-8 sets)','Target range: '+snWt(w)+' lbs'));
+      main.push(E('Snatch — Daily Max','Work to technical max','Target range: '+snWt(w)+' lbs'));
       main.push(E('Snatch Back-off','3×2 @ '+r5(snWt(w)*0.87)+' lbs','87% of daily max'));
     } else {
       main.push(E(w<=8?'Hang Snatch':'Snatch',(w<=8?'5×3':'4×'+(w<=16?'3':'2'))+' @ '+snWt(w)+' lbs','Target: '+snWt(w)+' lbs'));
     }
-    main.push(E('Overhead Squat','4×'+(w<=12?'5':'3')+' @ '+ohsWt(w)+' lbs','Target: '+ohsWt(w)+' lbs. T-spine + overhead + ankles.'));
-    main.push(E('Barbell Cossack Squat',(w<=4?'3×8 each BW':'4×'+(w<=12?'8':'5')+' each @ '+cosWt(w)+' lbs'),'Lateral hip. Target: '+cosWt(w)+' lbs'));
+    main.push(E('Overhead Squat','4×'+(w<=12?'5':'3')+' @ '+ohsWt(w)+' lbs','Target: '+ohsWt(w)+' lbs'));
+    main.push(E('Barbell Cossack Squat',(w<=4?'3×8 each BW':'4×'+(w<=12?'8':'5')+' each @ '+cosWt(w)+' lbs'),'Target: '+cosWt(w)+' lbs'));
     main.push(E('Snatch Pull','4×'+(w<=12?'4':'3')+' @ '+spWt(w)+' lbs','Full extension. Speed through middle.'));
     return {title:'THE SNAKE',focus:'Snatch + Overhead Squat + Cossack',duration:'75 min',
-      warmup:[E('Rower','10 min — steady Z2',''),],
+      warmup:[E('Rower','10 min — steady Z2','')],
+      iso:[E('OHS Hold at Bottom (empty bar)','30 sec','Snatch receiving position. T-spine + overhead + ankles.'),E('Cossack Squat Hold at Bottom','20 sec each','Deepest position. Adductor stretch under isometric demand.'),E('Snatch-Grip Hang with Scap Engagement','20 sec','Wide grip. Shoulders packed down. Overhead stability.')],
       mobility:[E('L-Sit Hold','3×'+(w<=12?'10-15s':w<=24?'15-20s':'20-25s'),'Core compression'),E('Prone Ball Steamroller','3×30s each dir','Anti-fragmentation'),E('Hip 90/90','2 min each','Critical before snatch work')],
       core:[],main,
-      conditioning:[E('DB Pullovers','3×12','Lat stretch + ribcage opening')]};
+      conditioning:[E('DB Pullovers','3×12','Lat stretch + ribcage opening'),...calfWork(3)]};
   }
 
   // ── DAY 5: THE GORILLA ──
   if(d===4){
     const main=[];
     if(isConv(w)){
-      main.push(E('Back Squat — Daily Max','Work to technical max (~5-7 sets)','Target range: '+sqWt(w)+' lbs'));
+      main.push(E('Back Squat — Daily Max','Work to technical max','Target range: '+sqWt(w)+' lbs'));
       main.push(E('Back Squat Back-off','3×2 @ '+r5(sqWt(w)*0.9)+' lbs','90% of daily max'));
     } else if(isExpr(w)){
-      main.push(E('Back Squat','4×3 @ '+sqWt(w)+' lbs → Depth Jump 4×5 from '+djHeight(w),'10-15s transition. Post-activation.'));
+      main.push(E('Back Squat','4×3 @ '+sqWt(w)+' lbs → Depth Jump 4×5 from '+djHeight(w),'Post-activation potentiation'));
     } else {
-      main.push(E('Back Squat',(isWave(w)?'Wave: '+setsReps(w):setsReps(w))+' @ '+sqWt(w)+' lbs','Target: '+sqWt(w)+' lbs. Full depth. Slingshot.'));
+      main.push(E('Back Squat',(isWave(w)?'Wave: '+setsReps(w):setsReps(w))+' @ '+sqWt(w)+' lbs','Target: '+sqWt(w)+' lbs'));
     }
     if(w<=12){
       main.push(E('Landmine Press','4×8 each @ '+lmpWt(w)+' lbs','Shoulder-safe arc. Bench enters Week 13.'));
@@ -904,41 +808,45 @@ function getDayData(w,d){
     }
     main.push(E('Nordic Curls','4×'+(w<=12?'5':'5-6')+' (4-sec eccentric)','Eccentric hamstring protection. Non-negotiable.'));
     main.push(E('Deficit Reverse Lunge','3×8 each @ '+lungeWt(w)+' lbs','Hip flexor + glute through full ROM'));
-    main.push(E(ringProg(w),'','Progression: holds→eccentrics→full ROM→weighted'));
+    main.push(E(ringProg(w),'','Holds→eccentrics→full ROM→weighted'));
     return {title:'THE GORILLA',focus:'Back Squat + Press + Nordic + Ring Dips',duration:'75 min',
       warmup:[E('Skip Rope','10 min — build intensity','Foot/calf activation + cardio')],
-      mobility:[E('Copenhagen Dips','3×8 each','Adductor protection — Poliquin mandate'),E('Landmine Rotation','3×10 each','Transverse power'),E('DB Goblet Squat Duck Walk','2×10 each','Loaded mobility')],
+      iso:[E('Squat Hold at Parallel','30 sec','The sticking point. Train the angle where heavy squats fail.'),E('Ring Support Hold','20 sec','Shoulders locked. Rings stable. Every stabilizer fires.'),E('Copenhagen Hold','15 sec each','Adductor armor before heavy squats and lunges.')],
+      mobility:[E('Copenhagen Dips','3×8 each','Adductor protection'),E('Landmine Rotation','3×10 each','Transverse power'),E('DB Goblet Squat Duck Walk','2×10 each','Loaded mobility')],
       core:[],main,
-      conditioning:[E('Sled Push/Pull','4×20m','Zero joint compression. Pure force.')]};
+      conditioning:[E('Sled Push/Pull','4×20m','Zero joint compression. Pure force.'),...calfWork(4)]};
   }
 
   // ── DAY 6: THE PANTHER ──
   if(d===5){
     const main=[];
     main.push(E('Slow Cable Swing','3×6 each dir (16s/rep)','Dedicated swing day'));
-    main.push(E('Lateral MB Throws','6×5 each','Express rotational power. Measure distance monthly.'));
+    main.push(E('Lateral MB Throws','6×5 each','Rotational power. Measure distance monthly.'));
     if(isExpr(w)){
       main.push(E('Back Squat','4×3 @ '+sqWt(w)+' lbs → Pogo Jumps 4×10','Post-activation ankle stiffness'));
     }
-    main.push(E('Front Rack BSS','4×'+(w<=12?'8':'6')+' each @ '+bssWt(w)+' lbs','Target: '+bssWt(w)+' lbs each. Single-leg king.'));
+    main.push(E('Front Rack BSS','4×'+(w<=12?'8':'6')+' each @ '+bssWt(w)+' lbs','Target: '+bssWt(w)+' lbs each'));
+    main.push(E('SLRDL','3×8 each','Single-leg hinge. Stretches + strengthens posterior chain.'));
     main.push(E('KOT Lunge','3×8 each','Knee health. Patellar tendon. NEVER skip.'));
     return {title:'THE PANTHER',focus:'Swing Power + Single-Leg + Deceleration',duration:'75 min',
-      warmup:[E('Run','10 min easy build',''),],
+      warmup:[E('Run','10 min easy build','')],
+      iso:[E('Split Stance Trail Hip Hold','20 sec each','Golf loading position. Feel right glute loaded.'),E('SL RDL Hold at Bottom','20 sec each','Hamstring lengthened under load. Right side: the range is safe.'),E('Plank','30 sec','Ribs DOWN. No hyperextension. Trunk unity before rotation.')],
       mobility:[E('Cable Deceleration Catch','3×8 each','Brake at follow-through. Haney mandate.'),E('Eccentric Rotational Band Hold','3×6 each','4-sec eccentric. Protects lead shoulder.'),E('Reverse Crab Reaches','3×8 each','Anterior chain opening')],
       core:[],main,
-      conditioning:[E('Backward Sled Drag','4×20m','Predator gait')]};
+      conditioning:[E('Backward Sled Drag','4×20m','Predator gait'),...calfWork(5)]};
   }
 
   // ── DAY 7: THE RESET — CONDITIONING FOCUS ──
   return {title:'THE RESET',focus:'Conditioning + Core + Recovery',duration:'60-70 min',
     warmup:[sunCond(w)],
-    mobility:[E('Dead Bug (90/90 Breathing)','3×8 each','Pelvic reset. Hyperextension fix.'),E('Copenhagen Dips','3×8 each','Adductor protection'),E('Hip 90/90','2 min each','Non-negotiable')],
+    iso:[],
+    mobility:[E('Dead Bug (90/90 Breathing)','3×8 each','Pelvic reset'),E('Copenhagen Dips','3×8 each','Adductor protection'),E('Hip 90/90','2 min each','Non-negotiable')],
     core:[],
     main:[
       E('DB Goblet Squat Duck Walk','3×10 steps each','Loaded mobility maintenance'),
       E('Reverse Crab Reaches','3×10 each','Anterior chain'),
       E('Foam Roll Full Body','10 min','Every major group'),
-      E('Visualization','5 min','See yourself on the first tee. See the ball flight.'),
+      E('Visualization','5 min','See yourself on the first tee.'),
     ],
     conditioning:[]};
 }
@@ -948,51 +856,47 @@ function getDayData(w,d){
 // ═══════════════════════════════════════════════════════════
 function getPeakDay(w,d){
   const wk=w-44;
-  // Week 48: post-test light
   if(wk===4){
-    if(d===0) return {title:'LIGHT ENGINE',focus:'Pattern maintenance',duration:'50 min',warmup:[E('Rower','10 min easy','')],mobility:[E('Hanging Leg Raises','3×8',''),E('Prone Ball Steamroller','3×20s each','')],core:[],main:[E('Power Clean','5×1 @ '+r5(cleanWt(44)*0.6)+' lbs','Crisp singles'),E('Back Squat','3×5 @ '+r5(sqWt(44)*0.6)+' lbs','Perfect form'),E('BB Hip Thrust','3×6 @ '+r5(htWt(44)*0.6)+' lbs','')],conditioning:[E('Reverse Hypers','3×12','')]};
-    if(d===1) return {title:'LIGHT PREDATOR',focus:'Movement quality',duration:'45 min',warmup:[E('Run','800m easy','')],mobility:[E('Dead Bug','3×8 each',''),E('Reverse Crab Reaches','3×8 each','')],core:[],main:[E('Light Sprints','4×20m @ 80%',''),E('Broad Jumps','3×3','')],conditioning:[E('Barefoot Walk','5 min','')]};
-    if(d===2) return {title:'LIGHT ARMOR',focus:'Maintenance',duration:'45 min',warmup:[E('Ski Erg','10 min easy','')],mobility:[E('Hanging Leg Raises','3×8','')],core:[],main:[E('Pendlay Row','3×5 @ '+r5(rowWt(44)*0.6)+' lbs',''),E('Pull-ups','3×5 BW',''),E('Bench Press','3×5 @ '+r5(benchWt(44)*0.6)+' lbs','')],conditioning:[E('Farmer\'s Carries','3×30m','')]};
-    if(d===3) return {title:'LIGHT SNAKE',focus:'Maintenance',duration:'45 min',warmup:[E('Rower','10 min easy','')],mobility:[E('L-Sit','3×10s',''),E('Hip 90/90','2 min each','')],core:[],main:[E('Snatch','5×1 @ '+r5(snWt(44)*0.6)+' lbs','Crisp'),E('OHS','3×5 @ '+r5(ohsWt(44)*0.5)+' lbs',''),E('Cossack Squat','3×6 each light','')],conditioning:[]};
-    if(d===4) return {title:'LIGHT GORILLA',focus:'Maintenance',duration:'45 min',warmup:[E('Skip Rope','10 min easy','')],mobility:[E('Copenhagen Dips','3×6 each',''),E('Landmine Rotation','3×8 each','')],core:[],main:[E('Back Squat','3×5 @ '+r5(sqWt(44)*0.6)+' lbs',''),E('Bench Press','3×5 @ '+r5(benchWt(44)*0.6)+' lbs',''),E('Nordic Curls','3×4','')],conditioning:[E('Reverse Hypers','3×12','')]};
-    if(d===5) return {title:'LIGHT PANTHER',focus:'Maintenance',duration:'45 min',warmup:[E('Run','10 min easy','')],mobility:[E('Reverse Crab Reaches','3×8 each','')],core:[],main:[E('Lateral MB Throws','3×4 each light',''),E('Front Rack BSS','3×6 each BW',''),E('KOT Lunge','3×8 each','')],conditioning:[]};
-    return {title:'REST + REFLECT',focus:'Year 1 Complete',duration:'Rest',warmup:[],mobility:[],core:[],main:[E('Complete Rest','Full day','52 weeks of data. Compare to Day 1. 405→520 squat. 170→290 clean. 105→175 snatch. 127→133 mph driver. They\'re playing for second.')],conditioning:[]};
+    if(d===0) return {title:'LIGHT ENGINE',focus:'Pattern maintenance',duration:'50 min',warmup:[E('Rower','10 min easy','')],iso:[],mobility:[E('Hanging Leg Raises','3×8',''),E('Prone Ball Steamroller','3×20s each','')],core:[],main:[E('Power Clean','5×1 @ '+r5(cleanWt(44)*0.6)+' lbs','Crisp'),E('Back Squat','3×5 @ '+r5(sqWt(44)*0.6)+' lbs',''),E('BB Hip Thrust','3×6 @ '+r5(htWt(44)*0.6)+' lbs','')],conditioning:[E('Reverse Hypers','3×12',''),...calfWork(0)]};
+    if(d===1) return {title:'LIGHT PREDATOR',focus:'Movement quality',duration:'45 min',warmup:[E('Run','800m easy','')],iso:[],mobility:[E('Dead Bug','3×8 each',''),E('Reverse Crab Reaches','3×8 each','')],core:[],main:[E('Light Sprints','4×20m @ 80%',''),E('Broad Jumps','3×3','')],conditioning:[E('Barefoot Walk','5 min',''),...calfWork(1)]};
+    if(d===2) return {title:'LIGHT ARMOR',focus:'Maintenance',duration:'45 min',warmup:[E('Ski Erg','10 min easy','')],iso:[],mobility:[E('Hanging Leg Raises','3×8','')],core:[],main:[E('Pendlay Row','3×5 @ '+r5(rowWt(44)*0.6)+' lbs',''),E('Pull-ups','3×5 BW',''),E('Bench Press','3×5 @ '+r5(benchWt(44)*0.6)+' lbs','')],conditioning:[E('Farmer\'s Carries','3×30m',''),...calfWork(2)]};
+    if(d===3) return {title:'LIGHT SNAKE',focus:'Maintenance',duration:'45 min',warmup:[E('Rower','10 min easy','')],iso:[],mobility:[E('L-Sit','3×10s',''),E('Hip 90/90','2 min each','')],core:[],main:[E('Snatch','5×1 @ '+r5(snWt(44)*0.6)+' lbs','Crisp'),E('OHS','3×5 @ '+r5(ohsWt(44)*0.5)+' lbs',''),E('Cossack Squat','3×6 each light','')],conditioning:[...calfWork(3)]};
+    if(d===4) return {title:'LIGHT GORILLA',focus:'Maintenance',duration:'45 min',warmup:[E('Skip Rope','10 min easy','')],iso:[],mobility:[E('Copenhagen Dips','3×6 each',''),E('Landmine Rotation','3×8 each','')],core:[],main:[E('Back Squat','3×5 @ '+r5(sqWt(44)*0.6)+' lbs',''),E('Bench Press','3×5 @ '+r5(benchWt(44)*0.6)+' lbs',''),E('Nordic Curls','3×4','')],conditioning:[E('Reverse Hypers','3×12',''),...calfWork(4)]};
+    if(d===5) return {title:'LIGHT PANTHER',focus:'Maintenance',duration:'45 min',warmup:[E('Run','10 min easy','')],iso:[],mobility:[E('Reverse Crab Reaches','3×8 each','')],core:[],main:[E('Lateral MB Throws','3×4 each light',''),E('Front Rack BSS','3×6 each BW',''),E('KOT Lunge','3×8 each','')],conditioning:[...calfWork(5)]};
+    return {title:'REST + REFLECT',focus:'Year 1 Complete',duration:'Rest',warmup:[],iso:[],mobility:[],core:[],main:[E('Complete Rest','Full day','52 weeks. Compare to Day 1. They\'re playing for second.')],conditioning:[]};
   }
-  // Week 47: TEST WEEK
   if(wk===3){
-    if(d===0) return {title:'1RM TEST — SQUAT + OHS',focus:'Back Squat + OHS + Cossack',duration:'75 min',warmup:[E('Rower','10 min build','')],mobility:[E('Duck Walk','2×10 each',''),E('Hip 90/90','2 min each','')],core:[],main:[E('Back Squat — 1RM Test','Work to max','TARGET: 500-530 lbs'),E('Overhead Squat — 1RM Test','Work to max','TARGET: 225-245 lbs'),E('Cossack Squat — Max Test','Heavy 3 each','TARGET: 155-175 each')],conditioning:[E('Reverse Hypers','3×12','')]};
-    if(d===1) return {title:'1RM TEST — OLYMPIC + PULL',focus:'Clean + Snatch + Row + Pull-up',duration:'75 min',warmup:[E('Run','800m build','')],mobility:[E('Hip 90/90','2 min each','')],core:[],main:[E('Power Clean — 1RM Test','Work to max','TARGET: 275-295 lbs'),E('Snatch — 1RM Test','Work to max','TARGET: 165-175 lbs'),E('Pendlay Row — 1RM Test','Work to max','TARGET: 245-265 lbs'),E('Weighted Pull-ups — Max Test','+90 lbs × max reps','TARGET: +90-100 × 5')],conditioning:[]};
-    if(d===2) return {title:'1RM TEST — BENCH + CONDITIONING',focus:'Bench + 2000m Row + Driver + 10K',duration:'75 min',warmup:[E('Ski Erg','10 min','')],mobility:[],core:[],main:[E('Bench Press — 1RM Test','Work to max','TARGET: 305-315 × 3'),E('2000m Row Test','All-out','TARGET: 1:45/500m split'),E('Driver Clubhead Speed','10 swings max effort','TARGET: 131-133 mph'),E('10K Run Test','Race pace','TARGET: 40-43 min')],conditioning:[]};
-    if(d===3) return {title:'SPRINT + JUMP TEST',focus:'100m + Vert + Broad + 400m',duration:'60 min',warmup:[E('Run','800m + dynamics','')],mobility:[],core:[],main:[E('100m Sprint Test','3 attempts','TARGET: sub 11.3'),E('Vertical Jump Test','3 attempts','Record'),E('Broad Jump Test','3 attempts','Record'),E('400m Test','2 attempts','TARGET: sub 70s')],conditioning:[]};
-    if(d===4) return {title:'ROTATION + MOBILITY TEST',focus:'MB distance + Splits + Ring Dips',duration:'60 min',warmup:[E('Skip Rope','10 min','')],mobility:[],core:[],main:[E('Lateral MB Throws — Distance Test','10 each, record best','Peak rotational power'),E('Forward Splits — Test','Both sides','TARGET: within 1 inch'),E('Lateral Splits — Test','','Hip base assessment'),E('Ring Dip — Max Test','Max full ROM reps','Benchmark')],conditioning:[]};
-    if(d===5) return {title:'REFLECTION',focus:'Review numbers',duration:'45 min',warmup:[E('Run','10 min easy','')],mobility:[],core:[],main:[E('Easy Row','15 min @ Z1','Flush'),E('Full Mobility','15 min',''),E('Visualization','10 min','See Year 2.')],conditioning:[]};
-    return {title:'REST',focus:'Recovery',duration:'Rest',warmup:[],mobility:[],core:[],main:[E('Complete Rest','Full day','Test week complete. Results are in.')],conditioning:[]};
+    if(d===0) return {title:'1RM TEST — SQUAT + OHS',focus:'Back Squat + OHS + Cossack',duration:'75 min',warmup:[E('Rower','10 min build','')],iso:[E('Goblet Squat Hold','30s',''),E('SL Glute Bridge Hold','20s each','')],mobility:[E('Duck Walk','2×10 each',''),E('Hip 90/90','2 min each','')],core:[],main:[E('Back Squat — 1RM Test','Work to max','TARGET: 500-530 lbs'),E('Overhead Squat — 1RM Test','Work to max','TARGET: 225-245 lbs'),E('Cossack Squat — Max Test','Heavy 3 each','TARGET: 155-175 each')],conditioning:[E('Reverse Hypers','3×12','')]};
+    if(d===1) return {title:'1RM TEST — OLYMPIC + PULL',focus:'Clean + Snatch + Row + Pull-up',duration:'75 min',warmup:[E('Run','800m build','')],iso:[E('Dead Hang','30s','')],mobility:[E('Hip 90/90','2 min each','')],core:[],main:[E('Power Clean — 1RM Test','Work to max','TARGET: 275-295 lbs'),E('Snatch — 1RM Test','Work to max','TARGET: 165-175 lbs'),E('Pendlay Row — 1RM Test','Work to max','TARGET: 245-265 lbs'),E('Weighted Pull-ups — Max Test','+90 lbs × max reps','TARGET: +90-100 × 5')],conditioning:[]};
+    if(d===2) return {title:'1RM TEST — BENCH + CONDITIONING',focus:'Bench + 2000m Row + Driver + 10K',duration:'75 min',warmup:[E('Ski Erg','10 min','')],iso:[],mobility:[],core:[],main:[E('Bench Press — 1RM Test','Work to max','TARGET: 305-315 × 3'),E('2000m Row Test','All-out','TARGET: 1:45/500m split'),E('Driver Clubhead Speed','10 swings max effort','TARGET: 131-133 mph'),E('10K Run Test','Race pace','TARGET: 40-43 min')],conditioning:[]};
+    if(d===3) return {title:'SPRINT + JUMP TEST',focus:'100m + Vert + Broad + 400m',duration:'60 min',warmup:[E('Run','800m + dynamics','')],iso:[E('Wall Sit','30s','')],mobility:[],core:[],main:[E('100m Sprint Test','3 attempts','TARGET: sub 11.3'),E('Vertical Jump Test','3 attempts',''),E('Broad Jump Test','3 attempts',''),E('400m Test','2 attempts','TARGET: sub 70s')],conditioning:[]};
+    if(d===4) return {title:'ROTATION + MOBILITY TEST',focus:'MB distance + Splits + Ring Dips',duration:'60 min',warmup:[E('Skip Rope','10 min','')],iso:[],mobility:[],core:[],main:[E('Lateral MB Throws — Distance Test','10 each, record best','Peak rotational'),E('Forward Splits — Test','Both sides','TARGET: within 1 inch'),E('Lateral Splits — Test','','Hip base'),E('Ring Dip — Max Test','Max full ROM reps','Benchmark')],conditioning:[]};
+    if(d===5) return {title:'REFLECTION',focus:'Review numbers',duration:'45 min',warmup:[E('Run','10 min easy','')],iso:[],mobility:[],core:[],main:[E('Easy Row','15 min @ Z1','Flush'),E('Full Mobility','15 min',''),E('Visualization','10 min','See Year 2.')],conditioning:[]};
+    return {title:'REST',focus:'Recovery',duration:'Rest',warmup:[],iso:[],mobility:[],core:[],main:[E('Complete Rest','Full day','Test week complete.')],conditioning:[]};
   }
-  // Weeks 45-46: Peak loading
-  const peakClean=r5(cleanWt(44)*0.95);const peakSq=r5(sqWt(44)*0.95);const peakRow=r5(rowWt(44)*0.95);
-  const peakSn=r5(snWt(44)*0.93);const peakBench=r5(benchWt(44)*0.95);const peakHt=r5(htWt(44)*0.92);
-  if(d===0) return {title:'PEAK ENGINE',focus:'Heavy Clean + Squat',duration:'70 min',warmup:[E('Rower','10 min build','')],mobility:[E('Hanging Leg Raises','3×10',''),E('Prone Ball Steamroller','3×20s each',''),E('Duck Walk','2×10 each','')],core:[],main:[E('Slow Cable Swing','3×6 each',''),E('Power Clean','5×2 @ '+peakClean+' lbs','Peak'),E('Back Squat','4×2 @ '+peakSq+' lbs','Peak'),E('BB Hip Thrust','4×3 @ '+peakHt+' lbs','')],conditioning:[E('Reverse Hypers','3×12','')]};
-  if(d===1) return {title:'PEAK PREDATOR',focus:'Peak speed + conditioning',duration:'70 min',warmup:[E('Run','800m build + dynamics','')],mobility:[E('Dead Bug','3×8 each',''),E('Rotational MB Slam','4×6 each',''),E('Reverse Crab Reaches','3×8 each','')],core:[],main:[E('Sprints','8×10m + 4×20m + 2×40m','Peak sprint'),E('Row Intervals','4×5min @ '+rowPace(44)+'/500m','Peak rowing'),E('Trap Bar Jumps','4×4 @ '+r5(tbjWt(44)*0.9)+' lbs','')],conditioning:[E('Barefoot Walk','5 min','')]};
-  if(d===2) return {title:'PEAK ARMOR',focus:'Heavy pull',duration:'70 min',warmup:[E('Ski Erg','10 min build','')],mobility:[E('Hanging Leg Raises','3×10',''),E('Kneeling Landmine Rot.','3×8 each',''),E('DB Pullovers','3×12','')],core:[],main:[E('Pendlay Row','4×3 @ '+peakRow+' lbs',''),E('Weighted Pull-ups','4×3 @ +'+puWt(44)+' lbs',''),E('Chin-ups','4×4 @ +'+chinWt(44)+' lbs',''),E('DB Shoulder Press','4×5 @ '+pressWt(44)+' lbs',''),E('Shoulder Complex','3 rounds','')],conditioning:[E('Farmer\'s Carries','4×40m heavy','')]};
-  if(d===3) return {title:'PEAK SNAKE',focus:'Heavy snatch + OHS',duration:'70 min',warmup:[E('Rower','10 min','')],mobility:[E('L-Sit','3×15s',''),E('Prone Ball Steamroller','3×20s each',''),E('Hip 90/90','2 min each','')],core:[],main:[E('Slow Cable Swing','3×6 each',''),E('Snatch','5×2 @ '+peakSn+' lbs','Peak'),E('Overhead Squat','4×2 @ '+r5(ohsWt(44)*0.9)+' lbs',''),E('Cossack Squat','4×3 each @ '+r5(cosWt(44)*0.9)+' lbs',''),E('Snatch Pull','4×2 @ '+r5(spWt(44)*0.9)+' lbs','')],conditioning:[E('DB Pullovers','3×12','')]};
-  if(d===4) return {title:'PEAK GORILLA',focus:'Heavy squat + bench',duration:'70 min',warmup:[E('Skip Rope','10 min','')],mobility:[E('Copenhagen Dips','3×8 each',''),E('Landmine Rotation','3×10 each',''),E('Duck Walk','2×10 each','')],core:[],main:[E('Back Squat','4×2 @ '+peakSq+' lbs',''),E('Bench Press','4×3 @ '+peakBench+' lbs',''),E('Nordic Curls','4×5',''),E('Ring Dip','4×6 weighted','')],conditioning:[E('Sled Push/Pull','4×20m','')]};
-  if(d===5) return {title:'PEAK PANTHER',focus:'Peak swing power',duration:'70 min',warmup:[E('Run','10 min','')],mobility:[E('Cable Decel Catch','3×8 each',''),E('Ecc. Rot. Band Hold','3×6 each',''),E('Reverse Crab Reaches','3×8 each','')],core:[],main:[E('Slow Cable Swing','3×6 each',''),E('Lateral MB Throws','6×5 each',''),E('Front Rack BSS','4×5 each @ '+r5(bssWt(44)*0.9)+' lbs',''),E('KOT Lunge','3×8 each','')],conditioning:[E('Backward Sled Drag','4×20m','')]};
-  return {title:'PEAK RESET',focus:'Recovery before test',duration:'55 min',warmup:[E('Easy Run','25 min @ Z2','')],mobility:[E('Dead Bug','3×8 each',''),E('Copenhagen Dips','3×8 each',''),E('Hip 90/90','2 min each','')],core:[],main:[E('Foam Roll','10 min',''),E('Visualization','5 min','See yourself testing. See the numbers.')],conditioning:[]};
+  // Peak loading weeks 45-46
+  const pc=r5(cleanWt(44)*0.95),ps=r5(sqWt(44)*0.95),pr=r5(rowWt(44)*0.95),psn=r5(snWt(44)*0.93),pb=r5(benchWt(44)*0.95),ph=r5(htWt(44)*0.92);
+  if(d===0) return {title:'PEAK ENGINE',focus:'Heavy Clean + Squat',duration:'70 min',warmup:[E('Rower','10 min build','')],iso:[E('Goblet Squat Hold','30s',''),E('SL Glute Bridge Hold','20s each',''),E('Dead Hang','30s','')],mobility:[E('Hanging Leg Raises','3×10',''),E('Prone Ball Steamroller','3×20s each',''),E('Duck Walk','2×10 each','')],core:[],main:[E('Slow Cable Swing','3×6 each',''),E('Power Clean','5×2 @ '+pc+' lbs','Peak'),E('Back Squat','4×2 @ '+ps+' lbs','Peak'),E('BB Hip Thrust','4×3 @ '+ph+' lbs','')],conditioning:[E('Reverse Hypers','3×12',''),...calfWork(0)]};
+  if(d===1) return {title:'PEAK PREDATOR',focus:'Peak speed + conditioning',duration:'70 min',warmup:[E('Run','800m build + dynamics','')],iso:[E('Wall Sit','30s',''),E('SL Balance Eyes Closed','20s each','')],mobility:[E('Dead Bug','3×8 each',''),E('Rotational MB Slam','4×6 each',''),E('Reverse Crab Reaches','3×8 each','')],core:[],main:[E('Sprints','8×10m + 4×20m + 2×40m','Peak'),E('Row Intervals','4×5min @ '+rowPace(44)+'/500m','Peak rowing'),E('Trap Bar Jumps','4×4 @ '+r5(tbjWt(44)*0.9)+' lbs','')],conditioning:[E('Barefoot Walk','5 min',''),...calfWork(1)]};
+  if(d===2) return {title:'PEAK ARMOR',focus:'Heavy pull',duration:'70 min',warmup:[E('Ski Erg','10 min build','')],iso:[E('Dead Hang','30s',''),E('Chest-Supported Row Hold','20s',''),E('Hollow Body Hold','20s','')],mobility:[E('Hanging Leg Raises','3×10',''),E('Kneeling Landmine Rot.','3×8 each',''),E('DB Pullovers','3×12','')],core:[],main:[E('Pendlay Row','4×3 @ '+pr+' lbs',''),E('Weighted Pull-ups','4×3 @ +'+puWt(44)+' lbs',''),E('Chin-ups','4×4 @ +'+chinWt(44)+' lbs',''),E('DB Shoulder Press','4×5 @ '+pressWt(44)+' lbs',''),E('Shoulder Complex','3 rounds','')],conditioning:[E('Farmer\'s Carries','4×40m heavy',''),...calfWork(2)]};
+  if(d===3) return {title:'PEAK SNAKE',focus:'Heavy snatch + OHS',duration:'70 min',warmup:[E('Rower','10 min','')],iso:[E('OHS Hold at Bottom','30s',''),E('Cossack Hold at Bottom','20s each',''),E('Snatch-Grip Hang','20s','')],mobility:[E('L-Sit','3×15s',''),E('Prone Ball Steamroller','3×20s each',''),E('Hip 90/90','2 min each','')],core:[],main:[E('Slow Cable Swing','3×6 each',''),E('Snatch','5×2 @ '+psn+' lbs','Peak'),E('Overhead Squat','4×2 @ '+r5(ohsWt(44)*0.9)+' lbs',''),E('Cossack Squat','4×3 each @ '+r5(cosWt(44)*0.9)+' lbs',''),E('Snatch Pull','4×2 @ '+r5(spWt(44)*0.9)+' lbs','')],conditioning:[E('DB Pullovers','3×12',''),...calfWork(3)]};
+  if(d===4) return {title:'PEAK GORILLA',focus:'Heavy squat + bench',duration:'70 min',warmup:[E('Skip Rope','10 min','')],iso:[E('Squat Hold at Parallel','30s',''),E('Ring Support Hold','20s',''),E('Copenhagen Hold','15s each','')],mobility:[E('Copenhagen Dips','3×8 each',''),E('Landmine Rotation','3×10 each',''),E('Duck Walk','2×10 each','')],core:[],main:[E('Back Squat','4×2 @ '+ps+' lbs',''),E('Bench Press','4×3 @ '+pb+' lbs',''),E('Nordic Curls','4×5',''),E('Ring Dip','4×6 weighted','')],conditioning:[E('Sled Push/Pull','4×20m',''),...calfWork(4)]};
+  if(d===5) return {title:'PEAK PANTHER',focus:'Peak swing power',duration:'70 min',warmup:[E('Run','10 min','')],iso:[E('Split Stance Trail Hip Hold','20s each',''),E('SL RDL Hold at Bottom','20s each',''),E('Plank','30s','')],mobility:[E('Cable Decel Catch','3×8 each',''),E('Ecc. Rot. Band Hold','3×6 each',''),E('Reverse Crab Reaches','3×8 each','')],core:[],main:[E('Slow Cable Swing','3×6 each',''),E('Lateral MB Throws','6×5 each',''),E('Front Rack BSS','4×5 each @ '+r5(bssWt(44)*0.9)+' lbs',''),E('SLRDL','3×8 each',''),E('KOT Lunge','3×8 each','')],conditioning:[E('Backward Sled Drag','4×20m',''),...calfWork(5)]};
+  return {title:'PEAK RESET',focus:'Recovery before test',duration:'55 min',warmup:[E('Easy Run','25 min @ Z2','')],iso:[],mobility:[E('Dead Bug','3×8 each',''),E('Copenhagen Dips','3×8 each',''),E('Hip 90/90','2 min each','')],core:[],main:[E('Foam Roll','10 min',''),E('Visualization','5 min','')],conditioning:[]};
 }
 
 // ═══════════════════════════════════════════════════════════
 // DELOAD WEEKS (49-52)
 // ═══════════════════════════════════════════════════════════
 function getDeloadDay(w,d){
-  const dlC=r5(cleanWt(44)*0.58);const dlS=r5(sqWt(44)*0.58);const dlR=r5(rowWt(44)*0.58);
-  const dlSn=r5(snWt(44)*0.55);const dlB=r5(benchWt(44)*0.58);
-  if(d===0) return {title:'LIGHT ENGINE',focus:'Pattern maintenance',duration:'50 min',warmup:[E('Rower','10 min easy','')],mobility:[E('Hanging Leg Raises','3×8',''),E('Prone Ball Steamroller','3×20s each',''),E('Duck Walk','2×8 each','')],core:[],main:[E('Power Clean','5×1 @ '+dlC+' lbs','Crisp singles'),E('Back Squat','3×5 @ '+dlS+' lbs','Perfect form'),E('BB Hip Thrust','3×6 @ '+r5(htWt(44)*0.55)+' lbs','')],conditioning:[E('Reverse Hypers','3×12','')]};
-  if(d===1) return {title:'LIGHT PREDATOR',focus:'Easy conditioning',duration:'45 min',warmup:[E('Easy Run','800m','')],mobility:[E('Dead Bug','3×8 each',''),E('Reverse Crab Reaches','3×8 each','')],core:[],main:[E('Light Sprints','4×20m @ 75%',''),E('Easy Row','15 min @ Z1','Flush'),E('Broad Jumps','3×3','')],conditioning:[E('Barefoot Walk','5 min','')]};
-  if(d===2) return {title:'LIGHT ARMOR',focus:'Maintenance',duration:'45 min',warmup:[E('Ski Erg','10 min easy','')],mobility:[E('Hanging Leg Raises','3×8',''),E('DB Pullovers','3×12','')],core:[],main:[E('Pendlay Row','3×5 @ '+dlR+' lbs',''),E('Pull-ups','3×5 BW',''),E('Bench Press','3×5 @ '+dlB+' lbs',''),E('Shoulder Complex','2 rounds light','')],conditioning:[E('Farmer\'s Carries','3×30m','')]};
-  if(d===3) return {title:'LIGHT SNAKE',focus:'Maintenance',duration:'45 min',warmup:[E('Rower','10 min easy','')],mobility:[E('L-Sit','3×10s',''),E('Hip 90/90','2 min each','')],core:[],main:[E('Snatch','5×1 @ '+dlSn+' lbs','Crisp'),E('OHS','3×5 @ '+r5(ohsWt(44)*0.5)+' lbs',''),E('Cossack Squat','3×6 each light','')],conditioning:[E('DB Pullovers','3×12','')]};
-  if(d===4) return {title:'LIGHT GORILLA',focus:'Maintenance',duration:'45 min',warmup:[E('Skip Rope','10 min easy','')],mobility:[E('Copenhagen Dips','3×6 each',''),E('Landmine Rotation','3×8 each','')],core:[],main:[E('Back Squat','3×5 @ '+dlS+' lbs',''),E('Bench Press','3×5 @ '+dlB+' lbs',''),E('Nordic Curls','3×4',''),E('Ring Dip','3×5 light','')],conditioning:[E('Sled Push','4×20m light','')]};
-  if(d===5) return {title:'LIGHT PANTHER',focus:'Maintenance',duration:'45 min',warmup:[E('Run','10 min easy','')],mobility:[E('Reverse Crab Reaches','3×8 each','')],core:[],main:[E('Lateral MB Throws','3×4 each light',''),E('Front Rack BSS','3×6 each BW',''),E('KOT Lunge','3×8 each','')],conditioning:[]};
-  return {title:'THE RESET',focus:'Year 1 closing',duration:'50 min',warmup:[E('Easy Walk','20-30 min','Zero intensity')],mobility:[E('Dead Bug','3×8 each',''),E('Copenhagen Dips','3×8 each',''),E('Hip 90/90','3 min each','')],core:[],main:[E('Duck Walk','3×10 each',''),E('Foam Roll Full Body','10 min',''),E('Visualization','5 min','52 weeks done. Review. Prepare for Year 2.')],conditioning:[]};
+  const dc=r5(cleanWt(44)*0.58),ds=r5(sqWt(44)*0.58),dr=r5(rowWt(44)*0.58),dsn=r5(snWt(44)*0.55),db=r5(benchWt(44)*0.58);
+  if(d===0) return {title:'LIGHT ENGINE',focus:'Pattern maintenance',duration:'50 min',warmup:[E('Rower','10 min easy','')],iso:[E('Goblet Squat Hold','20s',''),E('Dead Hang','20s','')],mobility:[E('Hanging Leg Raises','3×8',''),E('Prone Ball Steamroller','3×20s each',''),E('Duck Walk','2×8 each','')],core:[],main:[E('Power Clean','5×1 @ '+dc+' lbs','Crisp'),E('Back Squat','3×5 @ '+ds+' lbs','Perfect'),E('BB Hip Thrust','3×6 @ '+r5(htWt(44)*0.55)+' lbs','')],conditioning:[E('Reverse Hypers','3×12',''),...calfWork(0)]};
+  if(d===1) return {title:'LIGHT PREDATOR',focus:'Easy conditioning',duration:'45 min',warmup:[E('Easy Run','800m','')],iso:[],mobility:[E('Dead Bug','3×8 each',''),E('Reverse Crab Reaches','3×8 each','')],core:[],main:[E('Light Sprints','4×20m @ 75%',''),E('Easy Row','15 min @ Z1',''),E('Broad Jumps','3×3','')],conditioning:[E('Barefoot Walk','5 min',''),...calfWork(1)]};
+  if(d===2) return {title:'LIGHT ARMOR',focus:'Maintenance',duration:'45 min',warmup:[E('Ski Erg','10 min easy','')],iso:[E('Dead Hang','20s','')],mobility:[E('Hanging Leg Raises','3×8',''),E('DB Pullovers','3×12','')],core:[],main:[E('Pendlay Row','3×5 @ '+dr+' lbs',''),E('Pull-ups','3×5 BW',''),E('Bench Press','3×5 @ '+db+' lbs',''),E('Shoulder Complex','2 rounds light','')],conditioning:[E('Farmer\'s Carries','3×30m',''),...calfWork(2)]};
+  if(d===3) return {title:'LIGHT SNAKE',focus:'Maintenance',duration:'45 min',warmup:[E('Rower','10 min easy','')],iso:[E('OHS Hold','20s','')],mobility:[E('L-Sit','3×10s',''),E('Hip 90/90','2 min each','')],core:[],main:[E('Snatch','5×1 @ '+dsn+' lbs','Crisp'),E('OHS','3×5 @ '+r5(ohsWt(44)*0.5)+' lbs',''),E('Cossack Squat','3×6 each light','')],conditioning:[E('DB Pullovers','3×12',''),...calfWork(3)]};
+  if(d===4) return {title:'LIGHT GORILLA',focus:'Maintenance',duration:'45 min',warmup:[E('Skip Rope','10 min easy','')],iso:[E('Squat Hold','20s','')],mobility:[E('Copenhagen Dips','3×6 each',''),E('Landmine Rotation','3×8 each','')],core:[],main:[E('Back Squat','3×5 @ '+ds+' lbs',''),E('Bench Press','3×5 @ '+db+' lbs',''),E('Nordic Curls','3×4',''),E('Ring Dip','3×5 light','')],conditioning:[E('Sled Push','4×20m light',''),...calfWork(4)]};
+  if(d===5) return {title:'LIGHT PANTHER',focus:'Maintenance',duration:'45 min',warmup:[E('Run','10 min easy','')],iso:[],mobility:[E('Reverse Crab Reaches','3×8 each','')],core:[],main:[E('Lateral MB Throws','3×4 each light',''),E('Front Rack BSS','3×6 each BW',''),E('SLRDL','3×6 each light',''),E('KOT Lunge','3×8 each','')],conditioning:[...calfWork(5)]};
+  return {title:'THE RESET',focus:'Year 1 closing',duration:'50 min',warmup:[E('Easy Walk','20-30 min','Zero intensity')],iso:[],mobility:[E('Dead Bug','3×8 each',''),E('Copenhagen Dips','3×8 each',''),E('Hip 90/90','3 min each','')],core:[],main:[E('Duck Walk','3×10 each',''),E('Foam Roll Full Body','10 min',''),E('Visualization','5 min','52 weeks done. Review. Prepare for Year 2.')],conditioning:[]};
 }
 
 let curWeek = 1;
@@ -1275,9 +1179,16 @@ function renderWorkout(){
     h += `</div>`;
   }
 
+  // Isometric Circuit
+  if(data.iso && data.iso.length){
+    h += `<div class="sec"><div class="sec-h">ISOMETRIC CIRCUIT</div>`;
+    data.iso.forEach((ex,i)=>{ h += exHTML(ex,'iso',i); });
+    h += `</div>`;
+  }
+
   // Mobility
   if(data.mobility && data.mobility.length){
-    h += `<div class="sec"><div class="sec-h">MOBILITY</div>`;
+    h += `<div class="sec"><div class="sec-h">CORE + MOBILITY</div>`;
     data.mobility.forEach((ex,i)=>{ h += exHTML(ex,'mb',i); });
     h += `</div>`;
   }
